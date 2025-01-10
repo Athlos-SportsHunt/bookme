@@ -8,8 +8,11 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
-THIRD_PARTY_APPS = []
+THIRD_PARTY_APPS = [
+    "social_django",
+]
 APPS = [
+    "core",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + APPS
 MIDDLEWARE = [
@@ -56,3 +59,22 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "core.User"
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.auth0.Auth0OAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_USER_MODEL = 'core.User'
+
+SOCIAL_AUTH_TRAILING_SLASH = False
+SOCIAL_AUTH_AUTH0_DOMAIN = "dev-ub34v7txe2i1uaz8.us.auth0.com"
+SOCIAL_AUTH_AUTH0_KEY = "ioFT3fXYTeQWx2sel7HPZrnmfffQS04s"
+SOCIAL_AUTH_AUTH0_SECRET = "7FHzyaQdmpvL6NTr2Ur8zUmYVzvflH-338DLfo0cWyQFNo57VBbb6hYsodotJFEY"
+SOCIAL_AUTH_AUTH0_SCOPE = ['openid', 'profile', 'email']
+
+LOGIN_URL = 'auth/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
