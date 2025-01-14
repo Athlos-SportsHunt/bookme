@@ -14,6 +14,9 @@ class Venue(models.Model):
         if not self.host.is_host:
             raise ValidationError("Only hosts can create venues")
         super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return f"{self.name}"
 
 class Turf(models.Model):
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name='turf_venue')
@@ -36,6 +39,9 @@ class Turf(models.Model):
     def save(self, *args, **kwargs):
         self.clean()  # Call the clean method to perform validation
         super().save(*args, **kwargs)  # Call the real save() method
+        
+    def __str__(self):
+        return f"{self.venue.name} -> {self.name}"
     
 
 
@@ -84,4 +90,7 @@ class Booking(models.Model):
             duration = (self.end_datetime - self.start_datetime).total_seconds() / 3600.0  # duration in hours
             self.total_price = duration * self.turf.price_per_hr
         super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return f"{self.turf.venue.name} -> {self.turf.name} -> {self.start_datetime} to {self.end_datetime}"
 
