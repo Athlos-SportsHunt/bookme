@@ -11,6 +11,7 @@ class Venue(models.Model):
     # address, gmaps link
 
     def save(self, *args, **kwargs):
+        # also add a check that name is unique
         if not self.host.is_host:
             raise ValidationError("Only hosts can create venues")
         super().save(*args, **kwargs)
@@ -19,7 +20,7 @@ class Venue(models.Model):
         return f"{self.name}"
 
 class Turf(models.Model):
-    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name='turf_venue')
+    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name='turfs')
     name = models.CharField(max_length=100) # turf name: 5-a-side, 7-a-side, 11-a-side or football, cricket, etc.
     price_per_hr = models.DecimalField(max_digits=6, decimal_places=2) # price per hour
     # bookings
