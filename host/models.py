@@ -9,8 +9,11 @@ class Venue(models.Model):
     name = models.CharField(max_length=100)
     host = models.ForeignKey(User, on_delete=models.CASCADE)
     # address, gmaps link
-    ...
 
+    def save(self, *args, **kwargs):
+        if not self.host.is_host:
+            raise ValidationError("Only hosts can create venues")
+        super().save(*args, **kwargs)
 
 class Turf(models.Model):
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name='turf_venue')
