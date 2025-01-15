@@ -54,3 +54,4 @@ def profile_view(req):
     
     bookings = Booking.objects.filter(user=req.user)
     return render(req, 'core/pages/profile.html', {'bookings': bookings})
+
