@@ -2,6 +2,7 @@ from django.db import models
 from core.models import User
 from datetime import datetime
 from django.core.exceptions import ValidationError
+from decimal import Decimal
 
 # Create your models here.
 class Venue(models.Model):
@@ -55,6 +56,11 @@ class Booking(models.Model):
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     
+    def get_start_time(self):
+        return self.start_datetime.strftime('%H:%M')
+    
+    def get_end_time(self):
+        return self.end_datetime.strftime('%H:%M')
     class Meta:
         unique_together = ('turf', 'start_datetime', 'end_datetime')
     
@@ -88,10 +94,10 @@ class Booking(models.Model):
     def save(self, *args, **kwargs):
         self.clean()  # Validate before saving
         if not self.pk:  # Only calculate total_price on creation
-            duration = (self.end_datetime - self.start_datetime).total_seconds() / 3600.0  # duration in hours
+            duration = Decimal((self.end_datetime - self.start_datetime).total_seconds()) / Decimal(3600.0)  # duration in hours
             self.total_price = duration * self.turf.price_per_hr
         super().save(*args, **kwargs)
         
     def __str__(self):
-        return f"{self.turf.venue.name} -> {self.turf.name} -> {self.start_datetime} to {self.end_datetime}"
+        return f"{self.turf.venue.name} -> {self.turf.name} -> {self.get_start_time()} to {self.end_datetime}"
 

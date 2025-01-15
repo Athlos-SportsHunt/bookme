@@ -1,3 +1,58 @@
-{{ turf.name }}
+{{ turf.name }} <br>
+{{ turf.venue.name }}
 <br>
-umm will do  later.
+<form id="booking-form" method="post" action="{% url 'api:handle_booking' %}">
+    {% csrf_token %}
+    <div>
+        <label for="date">Date:</label>
+        <input type="datetime-local" id="date" name="date" value="{{ today_date }}" required>
+    </div>
+    <div>
+        <label for="duration">Duration (minutes):</label>
+        <input type="number" id="duration" name="duration" min="60" step="30" value="60" required>
+        <button type="button" id="increase-duration">Increase Duration</button>
+    </div>
+    <button type="submit">Book Now</button>
+</form>
+
+<script>
+document.getElementById('increase-duration').addEventListener('click', function() {
+    var durationInput = document.getElementById('duration');
+    var currentDuration = parseInt(durationInput.value);
+    durationInput.value = currentDuration + 30;
+});
+
+document.getElementById('booking-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var date = document.getElementById('date').value;
+    var duration = document.getElementById('duration').value;
+    var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    var data = {
+        venue_id: '{{ turf.venue.id }}', // Assuming you have venue.id available in the context
+        turf_id: '{{ turf.id }}', // Assuming you have turf.id available in the context
+        start_date: date,
+        duration: duration
+    };
+
+    fetch("{% url 'api:handle_booking' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle the response data
+        console.log(data);
+        alert('Booking successful!');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Booking failed!');
+    });
+});
+</script>
