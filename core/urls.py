@@ -9,6 +9,7 @@ urlpatterns = [
     path("venue/", venue_filter_view, name='venue_filter'), #http://127.0.0.1:8000/venue/?venue=test
     path("venue/<int:venue_id>/", venue_view, name='venue'),
     path("venue/<int:venue_id>/turf/<int:turf_id>/", turf_view, name='turf'),
+    path("slot_callback/", slot_callback, name='slot_callback'),
 ]
 
 app_name = 'core'

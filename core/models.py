@@ -11,12 +11,21 @@ class User(AbstractUser):
     
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    booking = models.ForeignKey("host.Booking", on_delete=models.CASCADE)
-    payment_id = models.CharField(max_length=100)
-    order_timestamp = models.DateTimeField(auto_now_add=True)
+    booking = models.ForeignKey("host.Booking", on_delete=models.CASCADE, null=True)
+    payment_id = models.CharField(max_length=100, null=True, blank=True)
+    order_id = models.CharField(max_length=100, null=True, blank=True)
     signature = models.CharField(max_length=255, blank=True, null=True)
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    order_timestamp = models.DateTimeField(auto_now_add=True)
+    amount = models.FloatField(default=0)
+    paid = models.BooleanField(default=False)
     
     def __str__(self):
-        return f"{self.user.username} - {self.booking.turf.venue.name} - {self.booking.turf.name} - {self.booking.start_datetime} to {self.booking.end_datetime}"
+        return f"{self.user.username} - {self.order_details.turf.venue.name} - {self.order_details.turf.name} - {self.order_details.start_time} to {self.order_details.end_time}"
 
+class OrderDetails(models.Model):
+    turf = models.ForeignKey("host.Turf", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name="order_details")

@@ -15,6 +15,7 @@
     <button type="submit">Book Now</button>
 </form>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 document.getElementById('increase-duration').addEventListener('click', function() {
     var durationInput = document.getElementById('duration');
@@ -46,9 +47,35 @@ document.getElementById('booking-form').addEventListener('submit', function(even
     })
     .then(response => response.json())
     .then(data => {
-        // Handle the response data
-        console.log(data);
-        alert('Booking successful!');
+        if (data.order_details) {
+            var options = {
+                key: data.RAZORPAY_KEY_ID,
+                amount: data.order_details.amount,
+                currency: data.order_details.currency,
+                name: "{{ turf.venue.name }}",
+                description: "Booking for {{ turf.name }}",
+                order_id: data.order_details.id,
+                callback_url: data.callback_url,
+                
+                handler: function (response) {
+                    alert("Payment Successful!\nPayment ID: " + response.razorpay_payment_id);
+                    window.location.href = data.callback_url;
+                },
+                prefill: {
+                    name: "{{ request.user.username }}",
+                    email: "{{ request.user.email }}",
+                    contact: "{{ request.user.profile.phone_number }}" // Assuming you have phone_number in user profile
+                },
+                theme: {
+                    color: "#3399cc"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response){
+                alert("Payment Failed!\nError: " + response.error.description);
+            });
+            rzp1.open();
+        }
     })
     .catch(error => {
         console.error('Error:', error);

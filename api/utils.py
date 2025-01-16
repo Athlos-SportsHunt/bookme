@@ -8,14 +8,11 @@ class BookingValidation:
         self.req = req
 
     def validate(self):
-        print(f"Request body: {self.req.body}")
         data = json.loads(self.req.body.decode('utf-8'))
-        print(f"Data: {data}")
         venue_id = data.get('venue_id')
         turf_id = data.get('turf_id')
         start_time_str = data.get('start_date')
         
-        print(f"venue_id: {venue_id}, turf_id: {turf_id}, start_time_str: {start_time_str}, duration: {data.get('duration')}")
         try:
             duration_mins = int(data.get('duration'))
             if duration_mins < 60 or duration_mins % 30 != 0:
