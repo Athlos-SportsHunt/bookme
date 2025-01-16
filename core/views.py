@@ -59,6 +59,7 @@ def profile_view(req):
         return HttpResponseRedirect(reverse("login"))
 
     bookings = Booking.objects.filter(user=req.user)
+
     return render(req, "core/pages/profile.html", {"bookings": bookings})
 
 
@@ -117,3 +118,4 @@ def slot_callback(req):
         "core/pages/slot_callback.html",
         {"message": "Slot order created successfully!"},
     )
+
