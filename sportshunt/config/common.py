@@ -1,4 +1,8 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -72,11 +76,16 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_USER_MODEL = 'core.User'
 
 SOCIAL_AUTH_TRAILING_SLASH = False
-SOCIAL_AUTH_AUTH0_DOMAIN = "dev-ub34v7txe2i1uaz8.us.auth0.com"
-SOCIAL_AUTH_AUTH0_KEY = "ioFT3fXYTeQWx2sel7HPZrnmfffQS04s"
-SOCIAL_AUTH_AUTH0_SECRET = "7FHzyaQdmpvL6NTr2Ur8zUmYVzvflH-338DLfo0cWyQFNo57VBbb6hYsodotJFEY"
+
+
+SOCIAL_AUTH_AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
+SOCIAL_AUTH_AUTH0_KEY = os.getenv("AUTH0_CLIENT_ID")
+SOCIAL_AUTH_AUTH0_SECRET = os.getenv("AUTH0_CLIENT_SECRET")
 SOCIAL_AUTH_AUTH0_SCOPE = ['openid', 'profile', 'email']
 
 LOGIN_URL = 'auth/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+RAZOR_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+RAZOR_SECRET_KEY = os.getenv("RAZORPAY_KEY_SECRET")
