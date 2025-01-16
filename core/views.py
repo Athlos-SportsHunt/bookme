@@ -32,7 +32,6 @@ def logout_view(req):
 
 def venue_filter_view(req):
     venue_name = req.GET.get("venue", "")
-    print(venue_name, "uhh")
     venues = Venue.objects.filter(name__icontains=venue_name)
     if not venues:
         return render(req, "core/pages/venue_filter.html", {"error": "No venues found"})

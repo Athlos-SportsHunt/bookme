@@ -51,7 +51,6 @@ class BookingValidation:
         if not duration_mins:
             errors.append("Missing duration")
         try:
-            print(f"start_time_str: {start_time_str}")
             start_time = datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M')
         except ValueError:
             errors.append("Invalid start time format")

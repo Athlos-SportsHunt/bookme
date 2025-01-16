@@ -13,7 +13,6 @@ def login_required(f):
     @wraps(f)
     def decorated_function(req, *args, **kwargs):
         if req.user.is_anonymous:
-            print(req.user)
             return JsonResponse({"error": "Unauthorized"}, status=401)
         return f(req, *args, **kwargs)
     return decorated_function
