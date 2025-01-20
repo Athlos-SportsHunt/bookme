@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
-from .utils import BookingValidation
+from .utils import *
 from host.models import *
 from core.models import *
 from .decorators import *
@@ -84,3 +84,36 @@ def create_slot_order(req):
         status=201,
     )
 
+
+@host_required
+def create_venue(req):
+    validator = CreateVenueValidation(req)
+    validation_result = validator.validate()
+
+    if not validation_result["is_valid"]:
+        return JsonResponse(
+            {
+                "errors": validation_result.get(
+                    "errors", [validation_result.get("error")]
+                )
+            },
+            status=400,
+        )
+
+    cleaned_data = validation_result["validated_data"]
+    venue_name = cleaned_data["venue_name"]
+
+    venue = Venue.objects.create(
+        name=venue_name,
+        host=req.user,
+    )
+
+    return JsonResponse(
+        {
+            "message": "Venue created successfully!",
+            "venue_id": venue.id,
+            "venue_name": venue.name,
+        },
+        status=201,
+    )
+    

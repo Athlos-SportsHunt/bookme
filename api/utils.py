@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from host.models import Turf, Booking
+from host.models import *
 from django.core.exceptions import ValidationError
 import json
 
@@ -78,4 +78,34 @@ class BookingValidation:
         if overlapping_bookings.exists():
             return {"is_valid": False, "error": "The selected time slot is not available"}
 
+        return {"is_valid": True}
+    
+class CreateVenueValidation:
+    def __init__(self, req):
+        self.req = req
+        self.data = json.loads(req.body.decode('utf-8'))
+        self.validated_data = {}
+
+    def validate(self):
+        validation_methods = [
+            self._validate_venue_name,
+            # Add more validation methods here as needed
+        ]
+
+        for method in validation_methods:
+            result = method()
+            if not result["is_valid"]:
+                return result
+
+        return {"is_valid": True, "validated_data": self.validated_data}
+
+    def _validate_venue_name(self):
+        venue_name = self.data.get('venue_name')
+        if not venue_name:
+            return {"is_valid": False, "error": "Venue name is required"}
+
+        if Venue.objects.filter(name=venue_name).exists():
+            return {"is_valid": False, "error": "Venue with this name already exists"}
+
+        self.validated_data['venue_name'] = venue_name
         return {"is_valid": True}
