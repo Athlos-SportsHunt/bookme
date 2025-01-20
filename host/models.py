@@ -55,6 +55,7 @@ class Booking(models.Model):
     
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
+    # add another field if its offline booking
     
     def get_start_time(self):
         return self.start_datetime.strftime('%H:%M')

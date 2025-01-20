@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
-from .utils import *
+from .validation import *
 from host.models import *
 from core.models import *
 from .decorators import *
@@ -117,3 +117,78 @@ def create_venue(req):
         status=201,
     )
     
+@host_required
+def create_turf(req):
+    validator = CreateTurfValidation(req)
+    validation_result = validator.validate()
+
+    if not validation_result["is_valid"]:
+        return JsonResponse(
+            {
+                "errors": validation_result.get(
+                    "errors", [validation_result.get("error")]
+                )
+            },
+            status=400,
+        )
+
+    cleaned_data = validation_result["validated_data"]
+    venue = cleaned_data["venue"]
+    turf_name = cleaned_data["turf_name"]
+    price_per_hr = cleaned_data["price_per_hr"]
+
+    turf = Turf.objects.create(
+        name=turf_name,
+        venue=venue,
+        price_per_hr=price_per_hr,
+    )
+
+    return JsonResponse(
+        {
+            "message": "Turf created successfully!",
+            "turf_id": turf.id,
+            "turf_name": turf.name,
+            "price_per_hr": str(turf.price_per_hr),
+        },
+        status=201,
+    )
+
+
+@host_required
+def offline_slot_booking(req):
+    validator = BookingValidation(req)
+    validation_result = validator.validate()
+
+    if not validation_result["is_valid"]:
+        return JsonResponse(
+            {
+                "errors": validation_result.get(
+                    "errors", [validation_result.get("error")]
+                )
+            },
+            status=400,
+        )
+
+    cleaned_data = validation_result["validated_data"]
+    turf_instance = cleaned_data["turf"]
+
+    start_time = cleaned_data["start_time"]
+    end_time = cleaned_data["end_time"]
+
+    booking = Booking.objects.create(
+        turf=turf_instance,
+        user=req.user,
+        start_datetime=start_time,
+        end_datetime=end_time,
+        # if offline booking, add another field and set it to True
+    )
+
+    return JsonResponse(
+        {
+            "message": "Offline slot booking created successfully!",
+            "booking_id": booking.id,
+            "start_time": start_time,
+            "end_time": end_time,
+        },
+        status=201,
+    )
