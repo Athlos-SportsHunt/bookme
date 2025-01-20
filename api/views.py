@@ -118,11 +118,11 @@ def create_venue(req):
     )
     
 @host_required
-def create_turf(req):
-    validator = CreateTurfValidation(req)
+def create_turf(req,venue_id):
+    validator = CreateTurfValidation(req,venue_id)
     validation_result = validator.validate()
 
-    if not validation_result["is_valid"]:
+    if not validation_result["is_valid"]:   
         return JsonResponse(
             {
                 "errors": validation_result.get(
@@ -133,7 +133,11 @@ def create_turf(req):
         )
 
     cleaned_data = validation_result["validated_data"]
-    venue = cleaned_data["venue"]
+    # venue_id = cleaned_data["venue"]
+    try:
+        venue = Venue.objects.get(id=venue_id)
+    except Venue.DoesNotExist:
+        return JsonResponse({"error": "Venue not found"}, status=404)
     turf_name = cleaned_data["turf_name"]
     price_per_hr = cleaned_data["price_per_hr"]
 

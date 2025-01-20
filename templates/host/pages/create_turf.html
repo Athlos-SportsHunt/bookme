@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Turf</title>
+</head>
+<body>
+    <h1>Create a New Turf</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="turf_name">Turf Name:</label>
+        <input type="text" id="turf_name" name="turf_name" required>
+        
+        <label for="price_per_hr">Price per Hour:</label>
+        <input type="number" id="price_per_hr" name="price_per_hr" required>
+        
+        <input type="hidden" id="venue_id" name="venue_id" value="{{ venue_id }}">
+        
+        <button type="submit">Create Turf</button>
+    </form>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const turfName = document.getElementById('turf_name').value;
+            const pricePerHr = document.getElementById('price_per_hr').value;
+            const venueId = document.getElementById('venue_id').value;
+            
+            const response = await fetch('{% url "api:create_turf" venue_id %}', {  // API endpoint updated
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    turf_name: turfName,
+                    price_per_hr: pricePerHr,
+                    venue: parseInt(venueId)  // Convert venue_id to integer before sending
+                })
+            });
+            
+            if (response.ok) {
+                alert('Turf created successfully!');
+                window.location.href = `{% url 'host:venue' venue_id %}`;  // Redirect to venue page
+            } else {
+                alert('Failed to create turf.');
+            }
+        });
+        </script>
+        
+</body>
+</html>

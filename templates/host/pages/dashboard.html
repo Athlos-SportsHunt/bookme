@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to your Dashboard, {{ user.username }}</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Your Venues</h2>
+            <ul>
+                {% for venue in venues %}
+                    <li>
+                        <a href="{% url 'host:venue' venue.id %}">{{ venue.name }}</a> - {{ venue.location }}
+                    </li>
+                {% empty %}
+                    <li>No venues available.</li>
+                {% endfor %}
+            </ul>
+            <section>
+                <button id="create-venue-btn">Create New Venue</button>
+            </section>
+    </main>
+</body>
+</html>
+
+<script>
+document.getElementById('create-venue-btn').addEventListener('click', function() {
+    window.location.href = "{% url 'host:create_venue' %}";
+});
+</script>

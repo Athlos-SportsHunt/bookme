@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Venue</title>
+</head>
+<body>
+    <h1>Create a New Venue</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="venue_name">Venue Name:</label>
+        <input type="text" id="venue_name" name="venue_name" required>
+        <button type="submit">Create Venue</button>
+    </form>
+</body>
+<script>
+document.querySelector('form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const venueName = document.getElementById('venue_name').value;
+    
+    const response = await fetch('{% url "api:create_venue" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({ venue_name: venueName })
+    });
+    
+    if (response.ok) {
+        const data = await response.json();
+        const venueId = data.id;
+        window.location.href = `{% url 'host:dashboard' %}`;
+    } else {
+        alert('Failed to create venue.');
+    }
+});
+</script>
+</html>

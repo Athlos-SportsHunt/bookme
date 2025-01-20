@@ -119,14 +119,16 @@ class CreateVenueValidation:
         return {"is_valid": True}
 
 class CreateTurfValidation:
-    def __init__(self, req):
+    def __init__(self, req, venue_id):
         self.req = req
+        self.venue_id = venue_id
         self.data = json.loads(req.body.decode('utf-8'))
         self.validated_data = {}
 
     def validate(self):
         validation_methods = [
-            self._validate_venue_id,
+            # self._validate_venue_id,
+            
             self._validate_turf_name,
             self._validate_price_per_hr,
             # Add more validation methods here as needed
@@ -139,25 +141,25 @@ class CreateTurfValidation:
 
         return {"is_valid": True, "validated_data": self.validated_data}
 
-    def _validate_venue_id(self):
-        venue_id = self.data.get('venue_id')
-        if not venue_id:
-            return {"is_valid": False, "error": "Venue ID is required"}
+    # def _validate_venue_id(self):
+    #     venue_id = self.data.get('venue_id')
+    #     if not venue_id:
+    #         return {"is_valid": False, "error": "Venue ID is required"}
 
-        try:
-            venue = Venue.objects.get(id=venue_id)
-        except Venue.DoesNotExist:
-            return {"is_valid": False, "error": "Venue does not exist"}
+        # try:
+        #     venue = Venue.objects.get(id=venue_id)
+        # except Venue.DoesNotExist:
+        #     return {"is_valid": False, "error": "Venue does not exist"}
 
-        self.validated_data['venue'] = venue
-        return {"is_valid": True}
+        # self.validated_data['venue'] = venue
+        # return {"is_valid": True}
 
     def _validate_turf_name(self):
         turf_name = self.data.get('turf_name')
         if not turf_name:
             return {"is_valid": False, "error": "Turf name is required"}
 
-        if Turf.objects.filter(name=turf_name, venue=self.validated_data['venue']).exists():
+        if Turf.objects.filter(name=turf_name, venue=self.venue_id).exists():
             return {"is_valid": False, "error": "Turf with this name already exists in the venue"}
 
         self.validated_data['turf_name'] = turf_name

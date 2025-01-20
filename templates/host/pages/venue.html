@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venue Details - {{ venue.name }}</title>
+</head>
+<body>
+    <header>
+        <h1>Venue: {{ venue.name }}</h1>
+        <p>Location: {{ venue.location }}</p>
+        <a href="{% url 'host:dashboard' %}">Back to Dashboard</a>
+    </header>
+
+    <main>
+        <section>
+            <h2>Turfs in this Venue</h2>
+            <ul>
+                {% for turf in turfs %}
+                    <li>{{ turf.name }} - ${{ turf.price_per_hr }}</li>
+                {% empty %}
+                    <li>No turfs available for this venue.</li>
+                {% endfor %}
+            </ul>
+        </section>
+            <section>
+                <a href="{% url 'host:create_turf' venue.id %}">
+                    <button type="button">Create Turf</button>
+                </a>
+            </section>
+        <section>
+
+            </form>
+        </section>
+    </main>
+    </script>
+</body>
+</html>

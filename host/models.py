@@ -8,7 +8,7 @@ from decimal import Decimal
 class Venue(models.Model):
     # hosts
     name = models.CharField(max_length=100)
-    host = models.ForeignKey(User, on_delete=models.CASCADE)
+    host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='venues')
     # address, gmaps link
 
     def save(self, *args, **kwargs):
