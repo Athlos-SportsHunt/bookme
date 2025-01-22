@@ -1,41 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Venue</title>
-</head>
-<body>
+{% extends 'host/base.html' %}
+{% load static %}
+
+{% block title %}Create Venue{% endblock %}
+
+{% block imports_block %}
+<link rel="stylesheet" href="{% static 'css/host/pages/create_venues.css'%}">
+{% endblock imports_block %}
+
+{% block content %}
+<div class="container">
     <h1>Create a New Venue</h1>
-    <form method="post">
+    <form method="post" id="venueForm">
         {% csrf_token %}
-        <label for="venue_name">Venue Name:</label>
-        <input type="text" id="venue_name" name="venue_name" required>
+        <div class="form-group">
+            <label for="venue_name">Venue Name:</label>
+            <input 
+                type="text" 
+                id="venue_name" 
+                name="venue_name" 
+                required 
+                placeholder="Enter venue name"
+                minlength="3"
+            >
+        </div>
         <button type="submit">Create Venue</button>
     </form>
-</body>
+    <div id="successMessage" class="success-message">
+        Venue created successfully!
+    </div>
+    <div id="errorMessage" class="error-message">
+        Error creating venue. Please try again.
+    </div>
+</div>
+{% endblock content %}
+
+{% block js_imports %}
 <script>
-document.querySelector('form').addEventListener('submit', async function(event) {
+document.getElementById('venueForm').addEventListener('submit', async function(event) {
     event.preventDefault();
-    
+
     const venueName = document.getElementById('venue_name').value;
-    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
     const response = await fetch('{% url "api:create_venue" %}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            'X-CSRFToken': csrfToken
         },
         body: JSON.stringify({ venue_name: venueName })
     });
-    
+
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    successMessage.style.display = 'none';
+    errorMessage.style.display = 'none';
+
     if (response.ok) {
-        const data = await response.json();
-        const venueId = data.id;
-        window.location.href = `{% url 'host:dashboard' %}`;
+        successMessage.style.display = 'block';
+        document.getElementById('venue_name').value = ''; // Clear the input
+        setTimeout(() => {
+            window.location.href = `{% url 'host:dashboard' %}`;
+        }, 2000);
     } else {
-        alert('Failed to create venue.');
+        errorMessage.style.display = 'block';
     }
 });
 </script>
-</html>
+{% endblock js_imports %}
