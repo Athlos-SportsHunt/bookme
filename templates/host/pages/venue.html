@@ -1,38 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Venue Details - {{ venue.name }}</title>
-</head>
-<body>
-    <header>
-        <h1>Venue: {{ venue.name }}</h1>
-        <p>Location: {{ venue.location }}</p>
-        <a href="{% url 'host:dashboard' %}">Back to Dashboard</a>
-    </header>
+{% extends 'host/base.html' %}
+{% load static%}
 
-    <main>
-        <section>
-            <h2>Turfs in this Venue</h2>
-            <ul>
-                {% for turf in turfs %}
-                    <li>{{ turf.name }} - ${{ turf.price_per_hr }}</li>
-                {% empty %}
-                    <li>No turfs available for this venue.</li>
-                {% endfor %}
-            </ul>
-        </section>
-            <section>
-                <a href="{% url 'host:create_turf' venue.id %}">
-                    <button type="button">Create Turf</button>
-                </a>
-            </section>
-        <section>
+{% block title %}Venue Details - {{ venue.name }}{% endblock %}
 
-            </form>
-        </section>
-    </main>
-    </script>
-</body>
-</html>
+{% block imports_block %}
+<link rel="stylesheet" href="{% static 'css/host/pages/venue.css'%}">
+{% endblock imports_block %}
+
+
+{% block content %}
+<div class="container">
+    <h1>Venue: {{ venue.name }}</h1>
+
+    <div class="location-info">
+        <span class="location-label">Location:</span>
+        <span class="location-value">{{ venue.location }}</span>
+    </div>
+
+    <a href="{% url 'host:dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+    <div class="turfs-section">
+        <h2>Turfs in this Venue</h2>
+        <ul class="turf-list">
+            {% for turf in turfs %}
+                <li class="turf-item">
+                    <span class="turf-name">{{ turf.name }}</span>
+                    <span class="turf-price">${{ turf.price_per_hr }}</span>
+                </li>
+            {% empty %}
+                <li class="turf-item">No turfs available for this venue.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'host:create_turf' venue.id %}">
+            <button class="create-turf-btn">Create Turf</button>
+        </a>
+    </div>
+</div>
+{% endblock content %}

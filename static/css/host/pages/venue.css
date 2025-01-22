@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: #fff;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.location-info {
+    margin-bottom: 16px;
+}
+
+.location-label {
+    color: #333;
+}
+
+.back-link {
+    color: #6366f1;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.turfs-section h2 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.turf-list {
+    list-style: none;
+    margin-bottom: 16px;
+}
+
+.turf-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.create-turf-btn {
+    background-color: #22c55e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.create-turf-btn:hover {
+    background-color: #16a34a;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 16px;
+    }
+}
