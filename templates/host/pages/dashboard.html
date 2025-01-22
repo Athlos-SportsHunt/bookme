@@ -1,35 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Host Dashboard</title>
-</head>
-<body>
-    <header>
+{% extends "host/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | SportsHunt{% endblock %}
+
+{% block imports_block %}
+<link rel="stylesheet" href="{% static 'css/host/pages/dashboard.css'%}">
+{% endblock imports_block %}
+
+{% block content %}
+<div class="container">
+    <!-- Header Section -->
+    <header class="header">
         <h1>Welcome to your Dashboard, {{ user.username }}</h1>
     </header>
-    <main>
-        <section>
-            <h2>Your Venues</h2>
-            <ul>
-                {% for venue in venues %}
-                    <li>
-                        <a href="{% url 'host:venue' venue.id %}">{{ venue.name }}</a> - {{ venue.location }}
-                    </li>
-                {% empty %}
-                    <li>No venues available.</li>
-                {% endfor %}
-            </ul>
-            <section>
-                <button id="create-venue-btn">Create New Venue</button>
-            </section>
-    </main>
-</body>
-</html>
 
+    <!-- Venues Section -->
+    <section class="venues-section">
+        <div class="section-header">
+            <h2 class="section-title">Your Venues</h2>
+            <button class="create-btn" id="create-venue-btn">Create New Venue</button>
+        </div>
+
+        <div class="venues-grid" id="venuesGrid">
+            <!-- Dynamic Venues -->
+            {% for venue in venues %}
+            <div class="venue-card">
+                <h3 class="venue-name">{{ venue.name }}</h3>
+                <p>{{ venue.location }}</p>
+                <div class="venue-actions">
+                    <a href="{% url 'host:venue' venue.id %}" class="btn">View Details</a>
+                    <button class="btn" onclick="editVenue('{{ venue.id }}')">Edit</button>
+                </div>
+            </div>
+            {% empty %}
+            <p>No venues available.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <h2 class="section-title">Quick Stats</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-title">Total Venues</div>
+                <div class="stat-value" id="totalVenues">{{ venues|length }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Active Bookings</div>
+                <div class="stat-value" id="activeBookings">{{ active_bookings }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Total Revenue</div>
+                <div class="stat-value" id="totalRevenue">${{ total_revenue }}</div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock content %}
+
+{% block js_imports %}
+<script src="{% static 'new/js/dashboard.js' %}"></script>
 <script>
-document.getElementById('create-venue-btn').addEventListener('click', function() {
-    window.location.href = "{% url 'host:create_venue' %}";
-});
+    // Redirect to the create venue page when button is clicked
+    document.getElementById('create-venue-btn').addEventListener('click', function() {
+        window.location.href = "{% url 'host:create_venue' %}";
+    });
+
+    // Additional JavaScript for editing venue
+    function editVenue(venueId) {
+        alert(`Editing venue with ID: ${venueId}`);
+    }
 </script>
+{% endblock js_imports %}

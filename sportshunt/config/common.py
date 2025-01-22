@@ -66,6 +66,14 @@ USE_I18N = True
 USE_TZ = False
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
 AUTH_USER_MODEL = "core.User"
 
 AUTHENTICATION_BACKENDS = (
@@ -76,7 +84,6 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_USER_MODEL = 'core.User'
 
 SOCIAL_AUTH_TRAILING_SLASH = False
-
 
 SOCIAL_AUTH_AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
 SOCIAL_AUTH_AUTH0_KEY = os.getenv("AUTH0_CLIENT_ID")
