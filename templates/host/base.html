@@ -9,12 +9,21 @@
     {% block imports_block %}{% endblock %}
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="navbar-brand">SportsHunt</a>
+    </nav>
+
     {% block header %}
-        
-
+    <!-- Additional header content can go here -->
     {% endblock header %}
-    {% block content %}{% endblock %}
 
-    {% block js_imports %}{% endblock js_imports %}
+    {% block content %}
+    <!-- Main content -->
+    {% endblock %}
+
+    {% block js_imports %}
+    <!-- JavaScript imports -->
+    {% endblock js_imports %}
 </body>
 </html>

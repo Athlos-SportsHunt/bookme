@@ -1,79 +1,202 @@
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: Arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Body */
 body {
-    background-color: #fff;
+    background-color: #f9f9f9; /* Softer background color for better contrast */
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
     padding: 20px;
 }
 
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #4CAF50; /* Green color */
+    padding: 10px 20px;
+    color: white;
 }
 
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+}
+
+/* Main Layout */
+.main-layout {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    width: 100%; /* Ensure it spans full width */
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #002d6b; /* Darker primary color */
+    color: white;
+    width: 240px;
+    padding: 1rem;
+    height: auto; /* Adjusts height */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-right: 20px; /* Add spacing */
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #004aad; /* Highlight */
+}
+
+/* Content Area */
+.content {
+    flex-grow: 1;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Cards */
+.card {
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+/* Container for Venue Form */
+.container {
+    max-width: 600px;
+    width: 100%;
+    background-color: #fff; /* White background for contrast */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 24px;
+    text-align: center; /* Center-align the content */
+}
+
+/* Heading */
 h1 {
     color: #333;
-    font-size: 24px;
+    font-size: 28px;
     margin-bottom: 16px;
+    font-weight: bold;
 }
 
-.location-info {
-    margin-bottom: 16px;
+/* Input Form */
+form {
+    margin-top: 16px;
 }
 
-.location-label {
+label {
+    display: block;
     color: #333;
+    font-size: 16px;
+    margin-bottom: 8px;
+    text-align: left;
 }
 
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #6366f1; /* Blue outline on focus */
+    outline: none;
+}
+
+/* Buttons */
+.create-turf-btn {
+    background-color: #3b82f6; /* Blue button */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-turf-btn:hover {
+    background-color: #2563eb; /* Slightly darker blue on hover */
+}
+
+/* Back Link */
 .back-link {
     color: #6366f1;
     text-decoration: none;
+    font-size: 14px;
+    margin-top: 16px;
     display: inline-block;
-    margin-bottom: 24px;
 }
 
 .back-link:hover {
     text-decoration: underline;
 }
 
-.turfs-section h2 {
-    color: #333;
-    font-size: 20px;
-    margin-bottom: 16px;
-}
-
-.turf-list {
-    list-style: none;
-    margin-bottom: 16px;
-}
-
-.turf-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-
-.create-turf-btn {
-    background-color: #22c55e;
+/* Footer */
+footer {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    background-color: #002d6b;
     color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+    border-radius: 8px;
 }
 
-.create-turf-btn:hover {
-    background-color: #16a34a;
-}
-
+/* Responsive Design */
 @media (max-width: 768px) {
-    body {
+    .container {
         padding: 16px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .create-turf-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .main-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-right: 0;
     }
 }

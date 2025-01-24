@@ -1,21 +1,48 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Turf Booking Dashboard{% endblock title %}
 
 {% block imports_block %}
 <link rel="stylesheet" href="{% static 'css/core/pages/index.css' %}">
+<script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 {% endblock imports_block %}
 
+{% block header %}
+<nav class="navbar">
+    <div class="logo">TurfBook</div>
+    <div class="profile-section">
+        <button id="loginBtn" class="auth-btn">Login</button>
+        <button id="logoutBtn" class="auth-btn">Logout</button>
+        <i class="fas fa-user-circle profile-icon"></i>
+    </div>
+</nav>
+{% endblock header %}
+
 {% block content %}
+<main>
+    <h1>Available Turfs</h1>
+    <div class="turf-grid" id="turfGrid">
+        <ul>
+            {% for venue in venues %}
+            <li class="turf-card">
+                <h2>{{ venue.name }}</h2>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 
-<h1>Venues</h1>
-<ul>
-    {% for venue in venues %}
-    <li>
-        <a href="{% url 'core:venue' venue.id %}">{{ venue.name }}</a>
-    </li>
-    {% endfor %}
-</ul>
-
+    <h1>Venues</h1>
+    <ul>
+        {% for venue in venues %}
+        <li>
+            <a href="{% url 'core:venue' venue.id %}">{{ venue.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</main>
 {% endblock content %}
+
+{% block js_imports %}
+<script src="{% static 'js/core/pages/index.js' %}"></script>
+{% endblock js_imports %}
