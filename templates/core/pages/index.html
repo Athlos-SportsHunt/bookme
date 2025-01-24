@@ -3,19 +3,15 @@
 
 {% block title %}Dashboard{% endblock %}
 
-
 {% block content %}
 
-<h1>Venues </h1>
-<div class="">
-    <ul>
-
-        {% for venue in venues  %}
-        <li>
-            {{ venue.name }}
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+<h1>Venues</h1>
+<ul>
+    {% for venue in venues %}
+    <li>
+        <a href="{% url 'core:venue' venue.id %}">{{ venue.name }}</a>
+    </li>
+    {% endfor %}
+</ul>
 
 {% endblock content %}

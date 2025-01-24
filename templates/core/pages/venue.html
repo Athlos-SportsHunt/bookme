@@ -1,12 +1,24 @@
 
 <h1>{{venue.name}}</h1>
-<br>
-
 <h2>Turfs</h2>
 <ul>
-    {% for turf in venue.turfs.all %}
-    <li>
-        {{ turf.name }}
-    </li>
-    {% endfor %}
+{% for turf in venue.turfs.all %}
+<li>
+    <a href="{% url 'core:turf' venue.id turf.id %}">{{ turf.name }}</a>
+</li>
+{% endfor %}
 </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

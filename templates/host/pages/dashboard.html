@@ -4,14 +4,14 @@
 {% block title %}Dashboard | SportsHunt{% endblock %}
 
 {% block imports_block %}
-<link rel="stylesheet" href="{% static 'css/host/pages/dashboard.css'%}">
+<link rel="stylesheet" href="{% static 'css/host/pages/dashboard.css' %}">
 {% endblock imports_block %}
 
 {% block content %}
 <div class="container">
     <!-- Header Section -->
     <header class="header">
-        <h1>Welcome to your Dashboard, {{ user.username }}</h1>
+        <h1>Welcome to your Dashboard, <span class="username">{{ user.username }}</span></h1>
     </header>
 
     <!-- Venues Section -->
@@ -26,14 +26,14 @@
             {% for venue in venues %}
             <div class="venue-card">
                 <h3 class="venue-name">{{ venue.name }}</h3>
-                <p>{{ venue.location }}</p>
+                <p class="venue-location">{{ venue.location }}</p>
                 <div class="venue-actions">
-                    <a href="{% url 'host:venue' venue.id %}" class="btn">View Details</a>
-                    <button class="btn" onclick="editVenue('{{ venue.id }}')">Edit</button>
+                    <a href="{% url 'host:venue' venue.id %}" class="btn view-btn">View Details</a>
+                    <button class="btn edit-btn" onclick="editVenue('{{ venue.id }}')">Edit</button>
                 </div>
             </div>
             {% empty %}
-            <p>No venues available.</p>
+            <p class="no-venues">No venues available.</p>
             {% endfor %}
         </div>
     </section>
