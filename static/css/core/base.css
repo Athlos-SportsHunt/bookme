@@ -1,0 +1,57 @@
+/* Base styles for the header and footer */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header .logo {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2em;
+    font-weight: bolder;
+    color: #007BFF;
+    text-decoration: none;
+}
+header .logo:hover {
+    color: #0056b3;
+}
+
+header .motto {
+    text-align: center;
+    flex-grow: 1;
+    font-size: 1.2em;
+    color: #333;
+}
+
+header .login-button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+header .login-button:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f1f1f1;
+    color: #333;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}

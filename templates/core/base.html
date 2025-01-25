@@ -5,14 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} SportsHunt {% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/core/pages/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/core/base.css' %}">
     {% block imports_block %}{% endblock %}
 </head>
 <body>
     {% block header %}
-
+    <header>
+        <a href="{% url 'core:index' %}" class="logo">SportsHunt</a>
+        <div class="motto">Book Your Game, Live Your Passion</div>
+        <a href="" class="login-button">Login</a>
+    </header>
     {% endblock header %}
+    
     {% block content %}{% endblock %}
+
+    <footer>
+        
+    </footer>
 
     {% block js_imports %}{% endblock js_imports %}
 </body>

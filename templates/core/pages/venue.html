@@ -1,24 +1,23 @@
+{% extends 'core/base.html' %}
 
-<h1>{{venue.name}}</h1>
-<h2>Turfs</h2>
-<ul>
-{% for turf in venue.turfs.all %}
-<li>
-    <a href="{% url 'core:turf' venue.id turf.id %}">{{ turf.name }}</a>
-</li>
-{% endfor %}
-</ul>
+{%load static%}
 
+{% block imports_block %}
+    <link rel="stylesheet" href="{% static 'css/core/pages/venue.css' %}">
+{% endblock imports_block %}
 
+{% block title %}
+    {{ venue.name }} - SportsHunt
+{% endblock %}
 
-
-
-
-
-
-
-
-
-
-
-
+{% block content %}
+    <h1>{{ venue.name }}</h1>
+    <h2>Turfs</h2>
+    <ul>
+    {% for turf in venue.turfs.all %}
+    <li>
+        <a href="{% url 'core:turf' venue.id turf.id %}">{{ turf.name }}</a>
+    </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

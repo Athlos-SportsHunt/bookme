@@ -1,0 +1,64 @@
+{% extends 'host/base.html' %}
+
+{% block title %}Turf Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ venue.name }}</h1>
+    <h2>{{ turf.name }}</h2>
+    <h3>Booked Slots</h3>
+    <ul>
+        {% for booking in bookings %}
+        <li> {{ booking.user.username }} - {{ booking.get_start_time }} to {{ booking.get_end_time }}</li>
+        {% empty %}
+            <li>No slots booked.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}
+
+{% block js_imports %}
+
+<div class="offline-booking-form">
+    <h3>Offline Booking</h3>
+    <form id="offline-booking-form">
+        <div class="form-group">
+            <label for="start_time">Start Time:</label>
+            <input type="datetime-local" id="start_time" name="start_time" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="end_time">End Time:</label>
+            <input type="datetime-local" id="end_time" name="end_time" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Book Offline</button>
+    </form>
+</div>
+
+<script>
+    const start_time = document.getElementById('start_time').value;
+    const end_time = document.getElementById('end_time').value;
+    const venue_id = document.getElementById('venue_id').dataset.id;
+    const turf_id = document.getElementById('turf_id').dataset.id;
+    
+    console.log("Data being sent:", { start_time, end_time, venue_id, turf_id });
+    
+    fetch("{% url 'api:offline_slot_booking' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}' // CSRF Token for security
+        },
+        body: JSON.stringify({
+            start_time: start_time,
+            end_time: end_time,
+            venue_id: venue_id,
+            turf_id: turf_id
+        })
+    })
+        .then(response => response.json())
+        .then(data => console.log("Response received:", data))
+        .catch(error => console.error("Error:", error));
+    
+</script>    
+
+{% endblock js_imports %}

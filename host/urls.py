@@ -5,6 +5,7 @@ urlpatterns = [
     path('venue/<int:venue_id>/', venue, name='venue'),
     path('create_venue/', create_venue, name='create_venue'),
     path('venue/<int:venue_id>/create_turf', create_turf, name='create_turf'),
+    path('venue/<int:venue_id>/turf/<int:turf_id>/', turf, name='turf'),
 ]
 
 app_name = 'host'

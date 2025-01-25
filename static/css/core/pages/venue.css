@@ -1,0 +1,48 @@
+/* venue.css */
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    margin-left: 30px; /* Adds a noticeable left gap */
+}
+
+h2{
+    font-size: 2em;
+    margin-bottom: 20px;
+    margin-left: 50px; /* Adds a noticeable left gap */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Makes the grid responsive */
+    gap: 75px;
+    margin: 0 auto;
+    max-width: 1200px; /* Restrict overall width for better alignment */
+}
+
+ul li a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: auto;
+    min-height: 300px;
+    max-width: 350px; /* Ensures consistent card width */
+    width: 100%;
+}
+
+ul li a:hover {
+    transform: scale(1.05);
+    background-color: #f0f0f0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}

@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="{% static 'css/host/pages/venue.css'%}">
 {% endblock imports_block %}
 
-
 {% block content %}
 <div class="container">
     <h1>Venue: {{ venue.name }}</h1>
@@ -24,8 +23,10 @@
         <ul class="turf-list">
             {% for turf in turfs %}
                 <li class="turf-item">
-                    <span class="turf-name">{{ turf.name }}</span>
-                    <span class="turf-price">${{ turf.price_per_hr }}</span>
+                    <a href="{% url 'host:turf' venue.id turf.id %}">
+                        <span class="turf-name">{{ turf.name }}</span>
+                        <span class="turf-price">${{ turf.price_per_hr }}</span>
+                    </a>
                 </li>
             {% empty %}
                 <li class="turf-item">No turfs available for this venue.</li>

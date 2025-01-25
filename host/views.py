@@ -27,3 +27,12 @@ def create_venue(req):
 @host_required
 def create_turf(req, venue_id):  # Accept venue_id
     return render(req, 'host/pages/create_turf.html', {'venue_id': venue_id})
+
+@host_required
+def turf(req, venue_id, turf_id):
+    venue = get_object_or_404(Venue, id=venue_id)
+    turf = get_object_or_404(Turf, id=turf_id)
+    bookings = turf.turf_booking.all()
+    return render(req, 'host/pages/turf.html', {'venue': venue, 'turf': turf, 'bookings': bookings})
+
+

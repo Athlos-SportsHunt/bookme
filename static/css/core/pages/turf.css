@@ -1,0 +1,63 @@
+/* turf.css */
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    margin-left: 40px; /* Adds a noticeable left gap */
+}
+
+h2{
+    font-size: 2em;
+    margin-bottom: 10px;
+    margin-left: 30px; /* Adds a noticeable left gap */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    height: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+form div {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+form input[type="datetime-local"],
+form input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    margin-bottom: 25px;
+}
+
+form button[type="button"],
+form button[type="submit"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #3399cc;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button[type="button"]:hover,
+form button[type="submit"]:hover {
+    background-color: #287a9e;
+}

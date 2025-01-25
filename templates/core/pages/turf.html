@@ -1,6 +1,17 @@
-{{ turf.name }} <br>
-{{ turf.venue.name }}
-<br>
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Turf Booking{% endblock %}
+
+{% block imports_block %}
+<link rel="stylesheet" href="{% static 'css/core/pages/turf.css' %}">
+{% endblock imports_block %}
+
+{% block content %}
+ 
+<h2>{{ turf.venue.name }}</h2>
+
+<h1>{{ turf.name }}</h1>
+
 <form id="booking-form" method="post" action="{% url 'api:handle_booking' %}">
     {% csrf_token %}
     <div>
@@ -14,7 +25,9 @@
     </div>
     <button type="submit">Book Now</button>
 </form>
+{% endblock %}
 
+{% block js_imports %}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 document.getElementById('increase-duration').addEventListener('click', function() {
@@ -83,3 +96,4 @@ document.getElementById('booking-form').addEventListener('submit', function(even
     });
 });
 </script>
+{% endblock %}
