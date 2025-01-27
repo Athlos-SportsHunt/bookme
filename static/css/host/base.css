@@ -1,94 +1,57 @@
-/* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Body */
+/* Base styles for the header and footer */
 body {
-    background-color: #f9f9f9;
-    color: #333;
-    line-height: 1.6;
-    font-size: 16px;
+    margin: 0;
+    font-family: Arial, sans-serif;
 }
 
-/* Navbar */
-.navbar {
+header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    background-color: #4CAF50; /* Green color */
+    align-items: center;
     padding: 10px 20px;
-    color: white;
-}
-
-.navbar-brand {
-    font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-}
-
-/* Main Layout */
-.main-layout {
-    display: flex;
-    flex-direction: row;
-    margin-top: 20px;
-}
-
-/* Sidebar */
-.sidebar {
-    background-color: #002d6b; /* Darker primary color */
-    color: white;
-    width: 240px;
-    padding: 1rem;
-    height: auto; /* Adjusts height */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin-right: 20px; /* Add spacing */
-}
-
-.sidebar a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-    padding: 0.5rem;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-    transition: background-color 0.3s;
-}
-
-.sidebar a:hover {
-    background-color: #004aad; /* Highlight */
-}
-
-/* Content Area */
-.content {
-    flex-grow: 1;
-    padding: 1rem;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Cards */
-.card {
-    background-color: #f9f9f9;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
+header .logo {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2em;
+    font-weight: bolder;
+    color: #007BFF;
+    text-decoration: none;
+}
+header .logo:hover {
+    color: #0056b3;
 }
 
-/* Footer */
-footer {
-    margin-top: 20px;
+header .motto {
     text-align: center;
-    padding: 10px;
-    background-color: #002d6b;
-    color: white;
-    border-radius: 8px;
+    flex-grow: 1;
+    font-size: 1.2em;
+    color: #333;
+}
+
+header .login-button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+header .login-button:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f1f1f1;
+    color: #333;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }

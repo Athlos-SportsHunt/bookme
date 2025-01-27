@@ -9,21 +9,20 @@
     {% block imports_block %}{% endblock %}
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <a href="#" class="navbar-brand">SportsHunt</a>
-    </nav>
-
     {% block header %}
-    <!-- Additional header content can go here -->
+    <header>
+        <a href="{% url 'host:dashboard' %}" class="logo">SportsHunt</a>
+        <div class="motto">Book Your Game, Live Your Passion</div>
+        <a href="" class="login-button">Login</a>
+    </header>
     {% endblock header %}
+    
+    {% block content %}{% endblock %}
 
-    {% block content %}
-    <!-- Main content -->
-    {% endblock %}
+    <footer>
+        
+    </footer>
 
-    {% block js_imports %}
-    <!-- JavaScript imports -->
-    {% endblock js_imports %}
+    {% block js_imports %}{% endblock js_imports %}
 </body>
 </html>
