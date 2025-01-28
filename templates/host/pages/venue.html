@@ -25,7 +25,7 @@
                 <li class="turf-item">
                     <a href="{% url 'host:turf' venue.id turf.id %}">
                         <span class="turf-name">{{ turf.name }}</span>
-                        <span class="turf-price">${{ turf.price_per_hr }}</span>
+                        <span class="turf-price">₹{{ turf.price_per_hr }}</span>
                     </a>
                 </li>
             {% empty %}

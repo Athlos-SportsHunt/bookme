@@ -1,81 +1,91 @@
 {% extends 'host/base.html' %}
 
+{% load static %}
+
 {% block title %}Turf Details{% endblock %}
+
+{% block imports_block %}
+<link rel="stylesheet" href="{% static 'css/host/pages/turf.css'%}">
+{% endblock imports_block %}
 
 {% block content %}
 <div class="container">
-    <h1>{{ venue.name }}</h1>
-    <h2>{{ turf.name }}</h2>
-    <h3>Booked Slots</h3>
-    <ul>
-        {% for booking in bookings %}
-        <li> {{ booking.user.username }} - {{ booking.get_start_time }} to {{ booking.get_end_time }}</li>
-        {% empty %}
-            <li>No slots booked.</li>
-        {% endfor %}
-    </ul>
+    <h1>Venue: {{ venue.name }}</h1>
+    <h1>Turf / TurfID: {{ turf.name }}</h1>
+
+    <div class="card-container">
+        <!-- Booked Slots Card -->
+        <div class="card">
+            <h3>Booked Slots</h3>
+            <ul>
+                {% for booking in bookings %}
+                <li>{{ booking.user.username }} - {{ booking.get_start_time }} to {{ booking.get_end_time }}</li>
+                {% empty %}
+                <li>No slots booked.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Offline Booking Card -->
+        <div class="card">
+            <h3>Offline Booking</h3>
+            <form id="offline-booking-form">
+                <div class="form-group">
+                    <label for="start_time">Start Time:</label>
+                    <input type="datetime-local" id="start_time" name="start_time" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration (minutes):</label>
+                    <input type="number" id="duration" name="duration" min="60" step="30" value="60" class="form-control" required>
+                    <button type="button" id="increase-duration" class="btn btn-secondary">+</button>
+                </div>
+                <button type="submit" class="btn btn-primary">Book Offline</button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock content %}
 
 {% block js_imports %}
-
-<div class="offline-booking-form">
-    <h3>Offline Booking</h3>
-    <form id="offline-booking-form">
-        <div class="form-group">
-            <label for="start_time">Start Time:</label>
-            <input type="datetime-local" id="start_time" name="start_time" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="duration">Duration (minutes):</label>
-            <input type="number" id="duration" name="duration" min="60" step="30" value="60" class="form-control" required>
-            <button type="button" id="increase-duration" class="btn btn-secondary">Increase Duration</button>
-        </div>
-        <button type="submit" class="btn btn-primary">Book Offline</button>
-    </form>
-</div>
-
 <script>
-document.getElementById('increase-duration').addEventListener('click', function() {
-    var durationInput = document.getElementById('duration');
-    var currentDuration = parseInt(durationInput.value);
-    durationInput.value = currentDuration + 30;
-});
-
-document.getElementById('offline-booking-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    var start_time = document.getElementById('start_time').value;
-    var duration = document.getElementById('duration').value;
-    var csrfToken = '{{ csrf_token }}';
-
-    fetch("{% url 'api:offline_slot_booking' %}", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
-        },
-        body: JSON.stringify({
-            start_time: start_time,
-            duration: duration,
-            venue_id: '{{ venue.id }}',
-            turf_id: '{{ turf.id }}'
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            alert(data.message);
-            // Optionally, you can refresh the page or update the booked slots list
-        } else if (data.errors) {
-            alert('Booking failed: ' + data.errors.join(', '));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Booking failed!');
+    document.getElementById('increase-duration').addEventListener('click', function() {
+        var durationInput = document.getElementById('duration');
+        var currentDuration = parseInt(durationInput.value);
+        durationInput.value = currentDuration + 30;
     });
-});
-</script>
 
+    document.getElementById('offline-booking-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var start_time = document.getElementById('start_time').value;
+        var duration = document.getElementById('duration').value;
+        var csrfToken = '{{ csrf_token }}';
+
+        fetch("{% url 'api:offline_slot_booking' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                start_time: start_time,
+                duration: duration,
+                venue_id: '{{ venue.id }}',
+                turf_id: '{{ turf.id }}'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+            } else if (data.errors) {
+                alert('Booking failed: ' + data.errors.join(', '));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Booking failed!');
+        });
+    });
+</script>
 {% endblock js_imports %}
