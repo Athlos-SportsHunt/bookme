@@ -31,8 +31,7 @@ def create_slot_order(req):
             },
             status=400,
         )
-
-    cleaned_data = validation_result
+    cleaned_data = validation_result["validated_data"]
     turf_instance = cleaned_data["turf"]
 
     start_time = cleaned_data["start_time"]
