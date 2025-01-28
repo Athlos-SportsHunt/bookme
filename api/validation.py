@@ -33,7 +33,7 @@ class BookingValidation:
         errors = []
 
         if not venue_id:
-            errors.append("Missing venue ID")
+            errors.append("Missing venue ID")   
         if not turf_id:
             errors.append("Missing turf ID")
         if not start_time_str:

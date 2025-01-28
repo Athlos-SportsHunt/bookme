@@ -1,47 +1,34 @@
-/* General Reset */
-* {
+/* Reset and Base Styles */
+body {
+    background-color: #f9f9f9; /* Softer background color */
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Body */
-body {
-    background-color: #f9f9f9; /* Softer background color for better contrast */
-    color: #333;
-    line-height: 1.6;
-    font-size: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Adjust alignment to top for better layout */
-    min-height: 100vh; /* Ensure it spans the full viewport */
-    padding: 20px; /* Add padding to prevent content from sticking to the edges */
+    font-family: Arial, sans-serif;
 }
 
 /* Main Container */
 .container {
-    max-width: 600px;
-    width: 100%;
-    background-color: #fff; /* White background for contrast */
-    border-radius: 8px;
+    max-width: 800px; /* Limit the content width */
+    width: 90%; /* Ensure responsiveness */
+    background-color: #fff; /* White background for better readability */
+    border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    padding: 32px; /* Increased padding for better spacing */
-    text-align: center; /* Center-align the content */
-    margin: auto; /* Center horizontally */
+    padding: 32px;
+    margin: 80px auto 40px auto; /* Space below the navbar and above the footer */
+    text-align: center; /* Center-align content */
 }
 
-/* Heading */
+/* Page Heading */
 h1 {
     color: #333;
     font-size: 28px;
-    margin-bottom: 20px; /* Add spacing after the heading */
+    margin-bottom: 20px; /* Space below the heading */
     font-weight: bold;
 }
 
-/* Location Info */
+/* Location Info Section */
 .location-info {
-    margin-bottom: 20px; /* Add space between location and other elements */
+    margin-bottom: 20px; /* Space after the location info */
     text-align: left; /* Align text to the left for better readability */
 }
 
@@ -62,7 +49,7 @@ h1 {
     text-decoration: none;
     font-size: 14px;
     margin-top: 16px;
-    margin-bottom: 24px; /* Add spacing before the next section */
+    margin-bottom: 24px; /* Space before the next section */
 }
 
 .back-link:hover {
@@ -71,7 +58,7 @@ h1 {
 
 /* Turfs Section */
 .turfs-section {
-    text-align: left; /* Align turfs section to the left */
+    text-align: left; /* Align the turfs section to the left */
 }
 
 .turfs-section h2 {
@@ -82,7 +69,7 @@ h1 {
 }
 
 .turf-list {
-    list-style-type: none;
+    list-style-type: none; /* Remove default bullet points */
     padding: 0;
     margin: 0;
 }
@@ -90,22 +77,22 @@ h1 {
 .turf-item {
     background-color: #f9f9f9;
     padding: 12px 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 12px; /* Add spacing between turf items */
-    transition: background-color 0.3s;
+    border: 1px solid #ddd; /* Light border for separation */
+    border-radius: 4px; /* Slightly rounded corners */
+    margin-bottom: 12px; /* Space between items */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
 .turf-item:hover {
-    background-color: #f1f1f1;
+    background-color: #f1f1f1; /* Light hover background */
 }
 
 .turf-item a {
     text-decoration: none;
     color: #333;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; /* Flex for alignment */
+    justify-content: space-between; /* Space between name and price */
+    align-items: center; /* Align vertically */
 }
 
 .turf-name {
@@ -117,27 +104,30 @@ h1 {
     font-size: 14px;
 }
 
-/* Button */
+/* Create Turf Button */
 .create-turf-btn {
+    display: inline-block; /* Ensure it's inline with padding/margin */
     background-color: #3b82f6; /* Blue button */
     color: white;
     border: none;
-    padding: 12px 24px; /* Larger padding for better look */
+    padding: 12px 24px; /* Padding for better size */
     font-size: 16px;
-    border-radius: 4px;
+    border-radius: 4px; /* Rounded corners */
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-top: 16px;
+    text-align: center;
+    text-decoration: none;
 }
 
 .create-turf-btn:hover {
-    background-color: #2563eb; /* Slightly darker blue on hover */
+    background-color: #2563eb; /* Darker blue on hover */
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
-        padding: 24px;
+        padding: 20px;
     }
 
     h1 {
@@ -147,5 +137,13 @@ h1 {
     .create-turf-btn {
         font-size: 14px;
         padding: 10px 20px;
+    }
+
+    .turf-item {
+        padding: 10px 12px;
+    }
+
+    .turf-price {
+        font-size: 12px;
     }
 }
