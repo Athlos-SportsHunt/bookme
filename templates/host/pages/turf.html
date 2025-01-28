@@ -15,26 +15,26 @@
         {% endfor %}
     </ul>
 </div>
-{% endblock content %}
-
-{% block js_imports %}
 
 <div class="offline-booking-form">
     <h3>Offline Booking</h3>
-    <form id="offline-booking-form">
+    <form id="offline-booking-form" method="post" action="{% url 'api:offline_slot_booking' %}">
+        {% csrf_token %}
         <div class="form-group">
             <label for="start_time">Start Time:</label>
-            <input type="datetime-local" id="start_time" name="start_time" class="form-control" required>
+            <input type="datetime-local" id="start_date" name="start_date" class="form-control" required>
         </div>
         <div class="form-group">
             <label for="duration">Duration (minutes):</label>
-            <input type="number" id="duration" name="duration" min="60" step="30" value="60" class="form-control" required>
+            <input type="number" id="duration" name="duration" min="30" step="30" value="30" class="form-control" required>
             <button type="button" id="increase-duration" class="btn btn-secondary">Increase Duration</button>
         </div>
         <button type="submit" class="btn btn-primary">Book Offline</button>
     </form>
 </div>
+{% endblock content %}
 
+{% block js_imports %}
 <script>
 document.getElementById('increase-duration').addEventListener('click', function() {
     var durationInput = document.getElementById('duration');
@@ -45,9 +45,9 @@ document.getElementById('increase-duration').addEventListener('click', function(
 document.getElementById('offline-booking-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission
 
-    var start_time = document.getElementById('start_time').value;
+    var start_time = document.getElementById('start_date').value;
     var duration = document.getElementById('duration').value;
-    var csrfToken = '{{ csrf_token }}';
+    var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     fetch("{% url 'api:offline_slot_booking' %}", {
         method: 'POST',
@@ -58,17 +58,19 @@ document.getElementById('offline-booking-form').addEventListener('submit', funct
         body: JSON.stringify({
             start_time: start_time,
             duration: duration,
-            venue_id: '{{ venue.id }}',
-            turf_id: '{{ turf.id }}'
+            turf_id: '{{ turf.id }}',
+            venue_id: '{{ venue.id }}'
         })
     })
     .then(response => response.json())
     .then(data => {
-        if (data.message) {
-            alert(data.message);
-            // Optionally, you can refresh the page or update the booked slots list
+        if (data.status === 'success') {
+            alert('Booking successful!');
+            location.reload(); // Refresh the page to show the updated booked slots
         } else if (data.errors) {
             alert('Booking failed: ' + data.errors.join(', '));
+        } else if (data.status === 'booked') {
+            alert('The slot is already booked.');
         }
     })
     .catch(error => {
@@ -77,5 +79,6 @@ document.getElementById('offline-booking-form').addEventListener('submit', funct
     });
 });
 </script>
-
 {% endblock js_imports %}
+
+

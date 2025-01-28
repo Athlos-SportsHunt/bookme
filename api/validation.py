@@ -8,6 +8,7 @@ class BookingValidation:
         self.req = req
         self.data = json.loads(req.body.decode('utf-8'))
         self.validated_data = {}
+        print(f"Initialization data: {self.data}")
 
     def validate(self):
         validation_methods = [
@@ -28,7 +29,7 @@ class BookingValidation:
         turf_id = self.data.get('turf_id')
         start_time_str = self.data.get('start_date')
         duration_mins = self.data.get('duration')
-
+        print(f"Input data: {venue_id}, {turf_id}, {start_time_str}, {duration_mins}")
         errors = []
 
         if not venue_id:
@@ -36,7 +37,12 @@ class BookingValidation:
         if not turf_id:
             errors.append("Missing turf ID")
         if not start_time_str:
-            errors.append("Missing start time")
+            errors.append("Start time is required")
+        else:
+            try:
+                start_time = datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M')
+            except ValueError:
+                errors.append("Invalid start time format")
         if not duration_mins:
             errors.append("Missing duration")
         try:
@@ -59,7 +65,7 @@ class BookingValidation:
         self.validated_data['duration_mins'] = duration_mins
         self.validated_data['end_time'] = start_time + timedelta(minutes=duration_mins)
 
-        return {"is_valid": True}
+        return {"is_valid": True,"validated_data": self.validated_data}
 
     def _validate_turf(self):
         venue_id = self.validated_data['venue_id']

@@ -33,7 +33,6 @@ def create_slot_order(req):
         )
     cleaned_data = validation_result["validated_data"]
     turf_instance = cleaned_data["turf"]
-
     start_time = cleaned_data["start_time"]
     end_time = cleaned_data["end_time"]
 
@@ -159,9 +158,15 @@ def create_turf(req,venue_id):
 
 @host_required
 def offline_slot_booking(req):
+    try:
+        data = json.loads(req.body.decode('utf-8'))
+        print(f"Received data: {data}")
+    except json.JSONDecodeError as e:
+        return JsonResponse({"errors": ["Invalid JSON data"]}, status=400)
+    
     validator = BookingValidation(req)
     validation_result = validator.validate()
-
+    print(f"Validation result: {validation_result}")
     if not validation_result["is_valid"]:
         return JsonResponse(
             {
@@ -177,7 +182,9 @@ def offline_slot_booking(req):
 
     start_time = cleaned_data["start_time"]
     end_time = cleaned_data["end_time"]
-
+    
+    print(f"cleaned data: {cleaned_data}")
+    
     booking = Booking.objects.create(
         turf=turf_instance,
         user=req.user,
