@@ -22,10 +22,20 @@
 {% block content %}
 <main>
     <h1>Venues</h1>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Search venues...">
+      <button type="button" id="search-button">
+        <i class="fas fa-search"></i>
+        Search
+      </button>
+    </div>
     <div class="turf-grid">
       {% for venue in venues %}
       <div class="turf-card">
-        <a href="{% url 'core:venue' venue.id %}" class="view-details"><h2>{{ venue.name }}</h2></a>
+      <a href="{% url 'core:venue' venue.id %}" class="view-details">
+        <img src="https://picsum.photos/300/200" alt="{{ venue.name }}" class="venue-image">
+        <h2>{{ venue.name }}</h2>
+      </a>
       </div>
       {% endfor %}
     </div>
@@ -34,4 +44,26 @@
 {% endblock content %}
 
 {% block js_imports %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const searchInput = document.getElementById("search-input");
+      const searchButton = document.getElementById("search-button");
+      const venueCards = document.querySelectorAll(".turf-card");
+  
+      function filterVenues() {
+          const query = searchInput.value.toLowerCase();
+          venueCards.forEach(card => {
+              const venueName = card.querySelector("h2").textContent.toLowerCase();
+              if (venueName.includes(query)) {
+                  card.style.display = "block";
+              } else {
+                  card.style.display = "none";
+              }
+          });
+      }
+  
+      searchButton.addEventListener("click", filterVenues);
+      searchInput.addEventListener("keyup", filterVenues);
+  });
+  </script>
 {% endblock js_imports %}

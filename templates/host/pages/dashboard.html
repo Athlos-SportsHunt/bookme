@@ -29,7 +29,6 @@
                 <p class="venue-location">{{ venue.location }}</p>
                 <div class="venue-actions">
                     <a href="{% url 'host:venue' venue.id %}" class="btn view-btn">View Details</a>
-                    <button class="btn edit-btn" onclick="editVenue('{{ venue.id }}')">Edit</button>
                 </div>
             </div>
             {% empty %}
@@ -67,9 +66,5 @@
         window.location.href = "{% url 'host:create_venue' %}";
     });
 
-    // Additional JavaScript for editing venue
-    function editVenue(venueId) {
-        alert(`Editing venue with ID: ${venueId}`);
-    }
 </script>
 {% endblock js_imports %}
