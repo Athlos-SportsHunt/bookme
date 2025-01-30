@@ -1,0 +1,103 @@
+/* Profile Page Styles */
+body {
+    background-color: #f8f9fa;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Container Styling */
+.profile-container {
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Profile Header */
+.profile-container h1 {
+    font-size: 2em;
+    color: #007BFF;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.profile-container p {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Host Badge */
+.profile-container .host-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Bookings Section */
+.profile-container h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-top: 30px;
+    border-bottom: 2px solid #007BFF;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* Booking List */
+.profile-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.profile-container ul li {
+    background-color: #f8f9fa;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+}
+
+.profile-container ul li a {
+    text-decoration: none;
+    font-size: 1.1em;
+    color: #007BFF;
+    font-weight: bold;
+}
+
+.profile-container ul li:hover {
+    background-color: #e9ecef;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-container {
+        width: 90%;
+        margin: 50px auto;
+        padding: 15px;
+    }
+
+    .profile-container h1 {
+        font-size: 1.8em;
+    }
+
+    .profile-container p {
+        font-size: 1.1em;
+    }
+
+    .profile-container h2 {
+        font-size: 1.3em;
+    }
+
+    .profile-container ul li {
+        font-size: 1em;
+    }
+}

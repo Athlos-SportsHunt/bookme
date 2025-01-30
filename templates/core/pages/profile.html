@@ -1,9 +1,16 @@
+{% extends "core/base.html" %}
+{% load static%}
 
+{% block imports_block %}
+<link rel="stylesheet" href="{% static 'css/core/pages/profile.css' %}">
+{% endblock imports_block %}
+
+{% block content %}
 <div class="profile-container">
-    <h1>{{ user.username }}'s Profile</h1>
+    <h1>{{ user.username }}</h1>
     <p>Email: {{ user.email }}</p>
     {% if user.is_host %}
-        Host
+        <span class="host-badge">Host</span>
     {% endif %}
     <h2>Bookings</h2>
     <ul>
@@ -11,6 +18,12 @@
         <li>
             <a href="#">{{ booking.turf.name }} on {{ booking.date }}</a>
         </li>
+        {% empty %}
+        <li>No bookings yet.</li>
         {% endfor %}
     </ul>
 </div>
+{% endblock content %}
+
+{% block js_imports %}
+{% endblock js_imports %}
