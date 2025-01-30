@@ -114,7 +114,18 @@ def create_venue(req):
         },
         status=201,
     )
-    
+
+@host_required
+def delete_venue(req, venue_id):
+    try:
+        venue = Venue.objects.get(id=venue_id)
+        if venue.host != req.user:
+            return JsonResponse({"error": "Not authorized"}, status=403)
+        venue.delete()
+        return JsonResponse({"message": "Venue deleted successfully!"}, status=200)
+    except Venue.DoesNotExist:
+        return JsonResponse({"error": "Venue not found"}, status=404)
+
 @host_required
 def create_turf(req,venue_id):
     validator = CreateTurfValidation(req,venue_id)
@@ -155,6 +166,16 @@ def create_turf(req,venue_id):
         status=201,
     )
 
+@host_required
+def delete_turf(req, turf_id):
+    try:
+        turf = Turf.objects.get(id=turf_id)
+        if turf.venue.host != req.user:
+            return JsonResponse({"error": "Not authorized"}, status=403)
+        turf.delete()
+        return JsonResponse({"message": "Turf deleted successfully!"}, status=200)
+    except Turf.DoesNotExist:
+        return JsonResponse({"error": "Turf not found"}, status=404)
 
 @host_required
 def offline_slot_booking(req):

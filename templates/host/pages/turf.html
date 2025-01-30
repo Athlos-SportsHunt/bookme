@@ -8,39 +8,50 @@
 <link rel="stylesheet" href="{% static 'css/host/pages/turf.css'%}">
 {% endblock imports_block %}
 
+
 {% block content %}
 <div class="container">
     <h1>{{ venue.name }}</h1>
     <h2>{{ turf.name }}</h2>
-    <h3>Booked Slots</h3>
-    <ul>
-        {% for booking in bookings %}
-        <li> {{ booking.user.username }} - {{ booking.get_start_time }} to {{ booking.get_end_time }}</li>
-        {% empty %}
-            <li>No slots booked.</li>
-        {% endfor %}
-    </ul>
+
+    <!-- Booked Slots Container -->
+    <div class="booked-slots">
+        <h3>Booked Slots</h3>
+        <ul>
+            {% for booking in bookings %}
+            <li>{{ booking.user.username }} - {{ booking.get_start_time }} to {{ booking.get_end_time }}</li>
+            {% empty %}
+            <p>No slots booked.</p>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Offline Booking Container -->
+    <div class="offline-booking-form">
+        <h3>Offline Booking</h3>
+        <form id="offline-booking-form" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="start_date">Start Time:</label>
+                <input type="datetime-local" id="start_date" name="start_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration (minutes):</label>
+                <input type="number" id="duration" name="duration" min="60" step="30" value="60" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <button type="button" id="increase-duration" class="btn btn-secondary">Increase Duration</button>
+                <br>
+                <button type="submit" class="btn btn-primary">Book Offline</button>
+            </div>
+        </form>
+    </div>
+    <button class="delete-turf-btn" type="button" data-turf-id="{{ turf.id }}">Delete Turf</button>
 </div>
+
 {% endblock content %}
 
 {% block js_imports %}
-
-<div class="offline-booking-form">
-    <h3>Offline Booking</h3>
-    <form id="offline-booking-form" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="start_date">Start Time:</label>
-            <input type="datetime-local" id="start_date" name="start_date" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="duration">Duration (minutes):</label>
-            <input type="number" id="duration" name="duration" min="60" step="30" value="60" class="form-control" required>
-            <button type="button" id="increase-duration" class="btn btn-secondary">Increase Duration</button>
-        </div>
-        <button type="submit" class="btn btn-primary">Book Offline</button>
-    </form>
-</div>
 
 
 <script>
@@ -74,6 +85,7 @@
     .then(data => {
         if (data.message) {
             alert(data.message);
+            location.reload();
             // Optionally, you can refresh the page or update the booked slots list
         } else if (data.errors) {
             alert('Booking failed: ' + data.errors.join(', '));
@@ -82,6 +94,31 @@
     .catch(error => {
         console.error('Error:', error);
         alert('Booking failed!');
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const deleteButton = document.querySelector(".delete-turf-btn");
+
+    deleteButton.addEventListener("click", async function() {
+        const confirmDelete = confirm("Are you sure you want to delete this turf?");
+        if (confirmDelete) {
+            const venueId = deleteButton.getAttribute("data-turf-id"); // Get from data attribute
+
+            const response = await fetch('{% url "api:delete_turf" turf.id %}', {   
+                method: "DELETE",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                window.location.href = "{% url 'host:venue' venue.id %}";
+            } else {
+                alert("Failed to delete venue. Please try again.");
+            }
+        }
     });
 });
 </script>

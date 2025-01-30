@@ -36,5 +36,37 @@
             <button class="create-turf-btn">Create Turf</button>
         </a>
     </div>
+    <button class="delete-venue-btn" type="button" data-venue-id="{{ venue.id }}">Delete Venue</button>
+
 </div>
 {% endblock content %}
+
+{% block js_imports %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const deleteButton = document.querySelector(".delete-venue-btn");
+
+    deleteButton.addEventListener("click", async function() {
+        const confirmDelete = confirm("Are you sure you want to delete this venue?");
+        if (confirmDelete) {
+            const venueId = deleteButton.getAttribute("data-venue-id"); // Get from data attribute
+
+            const response = await fetch('{% url "api:delete_venue" venue.id %}', {   
+                method: "DELETE",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                window.location.href = "{% url 'host:dashboard' %}";
+            } else {
+                alert("Failed to delete venue. Please try again.");
+            }
+        }
+    });
+});
+</script>
+{% endblock js_imports %}
+

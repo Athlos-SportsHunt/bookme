@@ -147,3 +147,23 @@ h1 {
         font-size: 12px;
     }
 }
+
+/* Delete Venue Button */
+.delete-venue-btn {
+    display: inline-block;
+    background-color: #ef4444; /* Red button */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 16px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.delete-venue-btn:hover {
+    background-color: #dc2626; /* Darker red on hover */
+}
