@@ -9,6 +9,10 @@ class Venue(models.Model):
     # hosts
     name = models.CharField(max_length=100)
     host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='venues')
+    images = models.ImageField(upload_to='venues_images/', null=True, blank=True)
+    description = models.TextField(blank=True, help_text="Description of the turf and its features")
+    address = models.TextField(help_text="Full address of the venue",default="") # address
+    google_maps_link = models.URLField(blank=True, help_text="Google Maps link to the venue location")
     # address, gmaps link
 
     def save(self, *args, **kwargs):
@@ -30,11 +34,7 @@ class Sport(models.Model):
         ('badminton', 'Badminton'),
     ]
     sport_type = models.CharField(max_length=50, choices=SPORT_CHOICES, unique=True)
-    amenities = models.JSONField(
-        default=list,
-        blank=True,
-        help_text="List of sport-specific amenities (e.g., cricket bat, ball, etc.)"
-    )
+    amenities = models.JSONField(default=list,blank=True,help_text="List of sport-specific amenities (e.g., cricket bat, ball, etc.)")
 
     def __str__(self):
         return self.name
@@ -44,8 +44,10 @@ class Turf(models.Model):
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name='turfs')
     name = models.CharField(max_length=100) # turf name: 5-a-side, 7-a-side, 11-a-side or football, cricket, etc.
     price_per_hr = models.DecimalField(max_digits=6, decimal_places=2) # price per hour
-    sport = models.ForeignKey(Sport, on_delete=models.CASCADE, related_name='sport_turfs')
-    
+    sport = models.ForeignKey(Sport, on_delete=models.CASCADE, related_name='sport_turfs', null=True)
+    images = models.ImageField(upload_to='turf_images/', null=True, blank=True)
+    description = models.TextField(blank=True, help_text="Description of the turf and its features")
+    amenities = models.JSONField(default=list, blank=True, help_text="List of available amenities")
     # bookings
     #  opening and closing hours
     #  available days
@@ -61,6 +63,8 @@ class Turf(models.Model):
             raise ValidationError('A turf with this name already exists in the venue.')
         
     def save(self, *args, **kwargs):
+        if not self.amenities:
+            self.amenities = self.sport.amenities  # Default to sport's amenities
         self.clean()  # Call the clean method to perform validation
         super().save(*args, **kwargs)  # Call the real save() method
         

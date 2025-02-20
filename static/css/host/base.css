@@ -48,6 +48,7 @@ header .motto {
     flex-grow: 1;
     font-size: 1.2em;
     color: #333;
+    font-weight: bold;
 }
 
 header .login-button {
@@ -108,4 +109,13 @@ footer {
     .container {
         padding: 20px;
     }
+}
+
+header .user-name {
+    padding: 10px 20px;
+    background-color: #e9ecef;
+    border-radius: 20px;
+    color: #050606;
+    font-size: xx-large;
+    font-weight: bold;
 }

@@ -100,10 +100,18 @@ def create_venue(req):
 
     cleaned_data = validation_result["validated_data"]
     venue_name = cleaned_data["venue_name"]
-
+    img = cleaned_data.get('img')
+    description = cleaned_data.get('description', '')
+    gmaps_maps_link = cleaned_data.get('gmaps_url', '')
+    address = cleaned_data['address']
+    
     venue = Venue.objects.create(
         name=venue_name,
         host=req.user,
+        images=img,
+        description=description,
+        gmaps_maps_link=gmaps_maps_link,
+        address=address,
     )
 
     return JsonResponse(
@@ -111,6 +119,7 @@ def create_venue(req):
             "message": "Venue created successfully!",
             "venue_id": venue.id,
             "venue_name": venue.name,
+            "address": venue.address, 
         },
         status=201,
     )
@@ -142,18 +151,28 @@ def create_turf(req,venue_id):
         )
 
     cleaned_data = validation_result["validated_data"]
+    
     # venue_id = cleaned_data["venue"]
     try:
         venue = Venue.objects.get(id=venue_id)
     except Venue.DoesNotExist:
         return JsonResponse({"error": "Venue not found"}, status=404)
+        
     turf_name = cleaned_data["turf_name"]
     price_per_hr = cleaned_data["price_per_hr"]
+    sport = cleaned_data['sport']
+    img = cleaned_data.get('img')
+    description = cleaned_data.get('description', '')
+    amenities = cleaned_data.get("amenities", sport.amenities)
 
     turf = Turf.objects.create(
         name=turf_name,
         venue=venue,
         price_per_hr=price_per_hr,
+        sport=sport,
+        images=img,
+        description=description,
+        amenities=amenities,
     )
 
     return JsonResponse(
@@ -162,9 +181,11 @@ def create_turf(req,venue_id):
             "turf_id": turf.id,
             "turf_name": turf.name,
             "price_per_hr": str(turf.price_per_hr),
+            "sport": sport.sport_type,
         },
         status=201,
     )
+
 
 @host_required
 def delete_turf(req, turf_id):
@@ -223,3 +244,5 @@ def offline_slot_booking(req):
         },
         status=201,
     )
+    
+    

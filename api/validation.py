@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from host.models import *
 from django.core.exceptions import ValidationError
 import json
+from django.core.validators import URLValidator
+
 
 class BookingValidation:
     def __init__(self, req):
@@ -94,15 +96,20 @@ class BookingValidation:
             return {"is_valid": False, "error": "The selected time slot is not available"}
 
         return {"is_valid": True}
+    
+    
 class CreateVenueValidation:
     def __init__(self, req):
         self.req = req
         self.data = json.loads(req.body.decode('utf-8'))
+        self.files = req.FILES  # Uploaded files
         self.validated_data = {}
 
     def validate(self):
         validation_methods = [
             self._validate_venue_name,
+            self._validate_image,
+            self._validate_google_maps_link
             # Add more validation methods here as needed
         ]
 
@@ -123,12 +130,49 @@ class CreateVenueValidation:
 
         self.validated_data['venue_name'] = venue_name
         return {"is_valid": True}
+    
+    def _validate_image(self):
+        image = self.files.get('image')
+        if not image:
+            return {"is_valid": False, "error": "Turf image is required"}
 
+        # Validate file type
+        allowed_types = ["image/jpeg", "image/png"]
+        if image.content_type not in allowed_types:
+            return {"is_valid": False, "error": "Invalid image format. Allowed: JPEG, PNG"}
+
+        self.validated_data['image'] = image
+        return {"is_valid": True}
+    
+    def _validate_google_maps_link(self):
+        gmaps_link = self.data.get('google_maps_link', '').strip()
+        if not gmaps_link:
+            return {"is_valid": True}  # It's optional, so return valid if empty
+
+        url_validator = URLValidator()
+        try:
+            url_validator(gmaps_link)
+        except ValidationError:
+            return {"is_valid": False, "error": "Invalid Google Maps link"}
+
+        self.validated_data['google_maps_link'] = gmaps_link
+        return {"is_valid": True}
+    
+    def _validate_address(self):
+        address = self.data.get('address', '').strip()
+        if not address:
+            return {"is_valid": False, "error": "Address is required"}
+
+        self.validated_data['address'] = address
+        return {"is_valid": True}
+    
+    
 class CreateTurfValidation:
     def __init__(self, req, venue_id):
         self.req = req
         self.venue_id = venue_id
         self.data = json.loads(req.body.decode('utf-8'))
+        self.files = req.FILES  # Uploaded files
         self.validated_data = {}
 
     def validate(self):
@@ -137,6 +181,9 @@ class CreateTurfValidation:
             
             self._validate_turf_name,
             self._validate_price_per_hr,
+            self._validate_turf_image,
+            self._validate_sport_id,
+            self._validate_amenities
             # Add more validation methods here as needed
         ]
 
@@ -147,18 +194,6 @@ class CreateTurfValidation:
 
         return {"is_valid": True, "validated_data": self.validated_data}
 
-    # def _validate_venue_id(self):
-    #     venue_id = self.data.get('venue_id')
-    #     if not venue_id:
-    #         return {"is_valid": False, "error": "Venue ID is required"}
-
-        # try:
-        #     venue = Venue.objects.get(id=venue_id)
-        # except Venue.DoesNotExist:
-        #     return {"is_valid": False, "error": "Venue does not exist"}
-
-        # self.validated_data['venue'] = venue
-        # return {"is_valid": True}
 
     def _validate_turf_name(self):
         turf_name = self.data.get('turf_name')
@@ -181,4 +216,38 @@ class CreateTurfValidation:
             return {"is_valid": False, "error": "Invalid price per hour"}
 
         self.validated_data['price_per_hr'] = price_per_hr
+        return {"is_valid": True}
+    
+    def _validate_turf_image(self):
+        image = self.files.get('image')  # Getting the uploaded image
+
+        if not image:
+            return {"is_valid": False, "error": "Turf image is required"}
+
+        # Validate file type
+        allowed_types = ["image/jpeg", "image/png"]
+        if image.content_type not in allowed_types:
+            return {"is_valid": False, "error": "Invalid image format. Allowed: JPEG, PNG"}
+
+        self.validated_data['image'] = image
+        return {"is_valid": True}
+    
+    def _validate_sport_id(self):
+        sport_id = self.data.get('sport_id')
+        if not sport_id:
+            return {"is_valid": False, "error": "Sport ID is required"}
+
+        try:
+            sport = Sport.objects.get(id=sport_id)
+            self.validated_data['sport'] = sport  # Save the actual sport instance
+        except Sport.DoesNotExist:
+            return {"is_valid": False, "error": "Invalid sport ID"}
+        return {"is_valid": True}
+
+    def _validate_amenities(self):
+        amenities = self.data.get('amenities', [])
+        if not isinstance(amenities, list):
+            return {"is_valid": False, "error": "Amenities must be a list"}
+
+        self.validated_data['amenities'] = amenities
         return {"is_valid": True}

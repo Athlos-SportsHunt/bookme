@@ -13,7 +13,11 @@
     <header>
         <a href="{% url 'host:dashboard' %}" class="logo">SportsHunt</a>
         <div class="motto">Book Your Game, Live Your Passion</div>
-        <a href="" class="login-button">Login</a>
+        {% if user.is_authenticated %}
+            <span class="user-name">{{ user.username }}</span>
+        {% else %}
+            <a href="{% url 'login' %}" class="login-button">Login</a>
+        {% endif %}
     </header>
     {% endblock header %}
     
