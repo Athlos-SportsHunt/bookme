@@ -16,6 +16,7 @@ THIRD_PARTY_APPS = [
     "social_django",
     'corsheaders',
     "rest_framework",
+    'drf_yasg',
 ]
 APPS = [
     "core",
