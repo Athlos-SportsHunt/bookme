@@ -32,11 +32,24 @@ ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
     *[f"{url.strip()}" for url in FRONTEND_URL],
+    "http://localhost:3000",
+    "http://127.0.0.1:8000"
 ]
 
-CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
-CSRF_COOKIE_HTTPONLY = False  # Ensure CSRF token is accessible to JavaScript
-CSRF_COOKIE_SAMESITE = 'None'  # Adjust based on your use case
+# CSRF settings
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'  # Changed from 'None' to 'Lax'
+CSRF_USE_SESSIONS = True  # Store CSRF token in session
+CSRF_COOKIE_NAME = 'csrftoken'
+
+# Session settings
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SAMESITE = 'Lax'  # Changed from 'None' to 'Lax'
+
+# CORS settings
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True  # For development only
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",

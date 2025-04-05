@@ -21,9 +21,18 @@ class Venue(models.Model):
         return f"{self.name}"
 
 class Turf(models.Model):
+    SPORT_CHOICES = [
+        ('football', 'Football'),
+        ('cricket', 'Cricket'),
+        ('basketball', 'Basketball'),
+        ('tennis', 'Tennis'),
+        ('badminton', 'Badminton'),
+    ]
+
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name='turfs')
-    name = models.CharField(max_length=100) # turf name: 5-a-side, 7-a-side, 11-a-side or football, cricket, etc.
-    price_per_hr = models.DecimalField(max_digits=6, decimal_places=2) # price per hour
+    name = models.CharField(max_length=100)  # turf name: 5-a-side, 7-a-side, 11-a-side etc.
+    sport = models.CharField(max_length=20, choices=SPORT_CHOICES, null=True, blank=True)  # Temporarily nullable
+    price_per_hr = models.DecimalField(max_digits=6, decimal_places=2)  # price per hour
     # bookings
     #  opening and closing hours
     #  available days
