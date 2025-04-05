@@ -14,6 +14,8 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "social_django",
+    'corsheaders',
+    "rest_framework",
 ]
 APPS = [
     "core",
@@ -28,6 +30,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 ROOT_URLCONF = "bookme.urls"
 TEMPLATES = [
@@ -45,6 +49,14 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -76,15 +88,13 @@ SOCIAL_AUTH_USER_MODEL = 'core.User'
 
 SOCIAL_AUTH_TRAILING_SLASH = False
 
+SOCIAL_AUTH_AUTH0_SCOPE = ['openid', 'profile', 'email']
 
-# SOCIAL_AUTH_AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
-# SOCIAL_AUTH_AUTH0_KEY = os.getenv("AUTH0_CLIENT_ID")
-# SOCIAL_AUTH_AUTH0_SECRET = os.getenv("AUTH0_CLIENT_SECRET")
-# SOCIAL_AUTH_AUTH0_SCOPE = ['openid', 'profile', 'email']
-
-LOGIN_URL = 'auth/login/'
+LOGIN_URL = 'core:login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # RAZOR_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
 # RAZOR_SECRET_KEY = os.getenv("RAZORPAY_KEY_SECRET")
+JWT_SECRET = os.getenv("JWT_SECRET")
+FRONTEND_URL = os.getenv("FRONTEND_URL").split(",")
