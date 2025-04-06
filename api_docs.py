@@ -27,5 +27,6 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
     patterns=[
         path('', include('core.urls')),
+        path('hosts/', include('host.urls')),
     ],
 )

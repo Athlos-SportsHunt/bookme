@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 from django.conf.urls import include
 from .views import *
-from .api_docs import schema_view
+from api_docs import schema_view
 from bookme.utils import login_handler, logout_handler
 
 urlpatterns = [

@@ -49,7 +49,6 @@ def logout_view(req):
 
 
 @api_view(['GET'])
-@login_required(DEV=True)
 @swagger_auto_schema(
     operation_description="Get a paginated list of all venues",
     responses={200: VenueSerializer(many=True)}
