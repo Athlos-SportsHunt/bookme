@@ -2,17 +2,21 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout
 from django.urls import reverse
-from django.conf import settings
-from rest_framework.decorators import api_view
+from django.shortcuts import render, get_object_or_404
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
+from rest_framework import status
+from django.db.models import Q
+from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.http import JsonResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from bookme.utils import *
-from .models import User
-
-from host.models import Venue
-from .serializers import VenueSerializer
+from .models import User, Order
+from host.models import Venue, Turf, Booking
+from .serializers import VenueSerializer, CreateOrderSerializer
 
 @api_view(['GET'])
 def index(req):
@@ -170,3 +174,99 @@ def filter_venues(request):
     
     serializer = VenueSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
+
+@swagger_auto_schema(
+    method='post',
+    request_body=CreateOrderSerializer,
+    responses={
+        201: openapi.Response('Created', examples={'application/json': {
+            'message': 'Order created successfully!',
+            'order_id': 'order_123xyz',
+            'amount': 100000,  # in paise
+            'currency': 'INR',
+            'key_id': 'rzp_test_xxx',
+            'booking_details': {
+                'turf': 'Turf Name',
+                'venue': 'Venue Name',
+                'start_time': '2025-04-07T10:00:00+05:30',
+                'end_time': '2025-04-07T11:00:00+05:30',
+                'duration': '60 minutes'
+            }
+        }}),
+        400: openapi.Response('Bad Request', examples={'application/json': {
+            'venue_id': ['Invalid venue'],
+            'turf_id': ['Invalid turf for this venue'],
+            'start_date': ['Invalid date format or slot unavailable'],
+            'duration': ['Must be at least 60 minutes and in increments of 30 minutes']
+        }}),
+        401: openapi.Response('Unauthorized - Invalid or missing token')
+    },
+    operation_description="""
+    Create a new order for a turf booking.
+    
+    Required fields:
+    - venue_id: ID of the venue
+    - turf_id: ID of the turf
+    - start_date: Start datetime in ISO format (YYYY-MM-DDTHH:MM)
+    - duration: Duration in minutes (minimum 60, must be in increments of 30)
+    """
+)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_order(request):
+    """Create a new order for a turf booking."""
+    serializer = CreateOrderSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        try:
+            validated_data = serializer.validated_data
+            turf = validated_data['turf']
+            razorpay_order = validated_data['razorpay_order']
+            
+            # Create booking
+            booking = Booking.objects.create(
+                turf=turf,
+                user=request.user,
+                start_datetime=validated_data['start_datetime'],
+                end_datetime=validated_data['end_datetime'],
+                total_price=Decimal(validated_data['amount']) / Decimal(100)  # Convert from paise to rupees
+            )
+            
+            # Create order
+            order = Order.objects.create(
+                user=request.user,
+                booking=booking,
+                payment_id=razorpay_order['id'],
+                amount=Decimal(validated_data['amount']) / Decimal(100)  # Convert from paise to rupees
+            )
+            
+            return Response({
+                'message': 'Order created successfully!',
+                'order_id': razorpay_order['id'],
+                'amount': razorpay_order['amount'],
+                'currency': razorpay_order['currency'],
+                'key_id': settings.RAZORPAY_KEY_ID,
+                'booking_details': {
+                    'turf': turf.name,
+                    'venue': turf.venue.name,
+                    'start_time': validated_data['start_datetime'].isoformat(),
+                    'end_time': validated_data['end_datetime'].isoformat(),
+                    'duration': f"{validated_data['duration']} minutes"
+                }
+            }, status=status.HTTP_201_CREATED)
+            
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(f"Error creating order: {str(e)}")
+            # If there was an error, clean up any created objects
+            if 'booking' in locals():
+                booking.delete()
+            return Response(
+                {'error': 'An unexpected error occurred while creating the order'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

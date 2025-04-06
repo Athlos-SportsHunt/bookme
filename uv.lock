@@ -20,6 +20,7 @@ dependencies = [
     { name = "django-cors-headers" },
     { name = "djangorestframework" },
     { name = "python-dotenv" },
+    { name = "razorpay" },
     { name = "social-auth-app-django" },
 ]
 
@@ -29,6 +30,7 @@ requires-dist = [
     { name = "django-cors-headers", specifier = ">=4.7.0" },
     { name = "djangorestframework", specifier = ">=3.15.2" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
+    { name = "razorpay", specifier = ">=1.4.2" },
     { name = "social-auth-app-django", specifier = ">=5.4.3" },
 ]
 
@@ -247,6 +249,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/5f/4a/29feb8da6c44f77007dcd29518fea73a3d5653ee02a587ae1f17f1f5ddb5/python3-openid-3.2.0.tar.gz", hash = "sha256:33fbf6928f401e0b790151ed2b5290b02545e8775f982485205a066f874aaeaf", size = 305600 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e0/a5/c6ba13860bdf5525f1ab01e01cc667578d6f1efc8a1dba355700fb04c29b/python3_openid-3.2.0-py3-none-any.whl", hash = "sha256:6626f771e0417486701e0b4daff762e7212e820ca5b29fcc0d05f6f8736dfa6b", size = 133681 },
+]
+
+[[package]]
+name = "razorpay"
+version = "1.4.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/97/fb/14d5baeffc5b812775bc34cb7d416aa090be6f5779c04aaf45d2ba17458b/razorpay-1.4.2.tar.gz", hash = "sha256:0d812030ba29e776e66d1ceaacc31635810fde18b66ff2591e582eb651bb5131", size = 194335 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e9/3d/07a25e3c6f3d65a319da30300f055d946860e90f705c05bb39524dc46f30/razorpay-1.4.2-py3-none-any.whl", hash = "sha256:aaf525baebc5001e5c54ae317a372c3c17c81314cedcbbf71aa0a2d3419a9757", size = 174302 },
 ]
 
 [[package]]

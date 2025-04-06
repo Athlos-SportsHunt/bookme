@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import User
-from datetime import datetime
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 
@@ -20,6 +20,17 @@ class Venue(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class Sport(models.Model):
+    """Model to store available sports"""
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
 class Turf(models.Model):
     SPORT_CHOICES = [
         ('football', 'Football'),
@@ -31,7 +42,7 @@ class Turf(models.Model):
 
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name='turfs')
     name = models.CharField(max_length=100)  # turf name: 5-a-side, 7-a-side, 11-a-side etc.
-    sport = models.CharField(max_length=20, choices=SPORT_CHOICES, null=True, blank=True)  # Temporarily nullable
+    sports = models.ManyToManyField(Sport, related_name='turfs')
     price_per_hr = models.DecimalField(max_digits=6, decimal_places=2)  # price per hour
     # bookings
     #  opening and closing hours
@@ -64,6 +75,7 @@ class Booking(models.Model):
     
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
+    is_offline = models.BooleanField(default=False)
     
     def get_start_time(self):
         return self.start_datetime.strftime('%H:%M')
@@ -81,7 +93,7 @@ class Booking(models.Model):
     def _validate_booking_order(self):
         if self.end_datetime <= self.start_datetime:
             raise ValidationError('End time must be after start time.')
-        if self.start_datetime < datetime.now():
+        if self.start_datetime < timezone.now():
             raise ValidationError('Booking cannot be in the past.')
 
     def _check_overlap(self):

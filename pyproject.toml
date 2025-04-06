@@ -9,5 +9,6 @@ dependencies = [
     "django-cors-headers>=4.7.0",
     "djangorestframework>=3.15.2",
     "python-dotenv>=1.1.0",
+    "razorpay>=1.4.2",
     "social-auth-app-django>=5.4.3",
 ]

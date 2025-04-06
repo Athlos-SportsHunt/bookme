@@ -41,13 +41,13 @@ def login_required(DEV=False):
 
 def host_required(f):
     @wraps(f)
-    @login_required
+    @login_required(DEV=True)
     def decorated_function(req, *args, **kwargs):
         if req.user.is_host:
             return f(req, *args, **kwargs)
         return Response(
-            {"error": "Unauthorized"},
-            status=status.HTTP_401_UNAUTHORIZED
+            {"error": "Only hosts can access this endpoint"},
+            status=status.HTTP_403_FORBIDDEN
         )
     return decorated_function
 
