@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from bookme.utils import get_user_from_token
+from bookme.utils import *
 from .models import User
 
 from host.models import Venue
@@ -49,6 +49,7 @@ def logout_view(req):
 
 
 @api_view(['GET'])
+@login_required(DEV=True)
 @swagger_auto_schema(
     operation_description="Get a paginated list of all venues",
     responses={200: VenueSerializer(many=True)}
