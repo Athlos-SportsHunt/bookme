@@ -155,11 +155,12 @@ def filter_venues(request):
         venues = venues.filter(name__icontains=name)
     
     if sports:
-        # Split the sports string into a list and clean the values
-        sport_list = [s.strip().lower() for s in sports.split(',') if s.strip()]
+        sport_list = [s.strip() for s in sports.split(',') if s.strip()]
         if sport_list:
-            # Filter venues that have turfs with ANY of the specified sports
-            venues = venues.filter(turfs__sport__in=sport_list).distinct()
+            query = Q()
+            for sport in sport_list:
+                query |= Q(turfs__sports__name__iexact=sport)
+            venues = venues.filter(query).distinct()
     
     if min_price is not None:
         venues = venues.filter(turfs__price_per_hr__gte=min_price).distinct()
