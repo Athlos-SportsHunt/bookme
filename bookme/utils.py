@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.conf import settings
 from datetime import datetime, timedelta
 from core.models import User
-import jwt
+from jose import jwt
 
 def login_required(DEV=False):
     def decorator(f):
@@ -56,7 +56,7 @@ def login_handler(req):
     # Generate JWT
     payload = {
         'user_id': req.user.id,
-        'exp': datetime.now() + timedelta(days=1)
+        'exp': datetime.now() + timedelta(days=10)
     }
     token = jwt.encode(payload, settings.JWT_SECRET, algorithm='HS256')
     
@@ -78,15 +78,22 @@ def login_handler(req):
 
 def get_user_from_token(token):
     try:
-        # Decode the JWT token
-        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=['HS256'])
-        user_id = payload.get('user_id')
-        return user_id
+        payload = jwt.decode(
+            token,
+            settings.JWT_SECRET,
+            algorithms=['HS256'],
+        )
+        return payload.get('user_id')
+    
     except jwt.ExpiredSignatureError:
-        return None
-    except jwt.InvalidTokenError:
+        # Token is expired
         return None
     
+    except jwt.InvalidTokenError as e:
+        # Token is invalid
+        print(f"Invalid token: {str(e)}")  # Optional: remove in production
+        return None
+
 def logout_handler(req):
     frontend_url = settings.FRONTEND_URL[0]
     response = HttpResponseRedirect(f"{frontend_url}")

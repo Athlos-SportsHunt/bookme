@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
 from django.utils import timezone
 from django.core.exceptions import ValidationError
@@ -20,7 +21,6 @@ from .serializers import VenueSerializer, CreateOrderSerializer
 
 @api_view(['GET'])
 def index(req):
-    print(req.user)
     token = req.COOKIES.get('jwt_token')
     if token:
         if user := get_user_from_token(token):
@@ -32,7 +32,7 @@ def index(req):
                     'id': user.id,
                     'name': user.username,
                     'email': user.email,
-                    'is_org': user.is_organizer
+                    'is_host': user.is_host
                 }
             })
     return Response({

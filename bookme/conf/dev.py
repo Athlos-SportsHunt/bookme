@@ -36,20 +36,22 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000"
 ]
 
-# CSRF settings
-CSRF_COOKIE_SECURE = False
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'  # Changed from 'None' to 'Lax'
-CSRF_USE_SESSIONS = True  # Store CSRF token in session
-CSRF_COOKIE_NAME = 'csrftoken'
-
-# Session settings
-SESSION_COOKIE_SECURE = False
-SESSION_COOKIE_SAMESITE = 'Lax'  # Changed from 'None' to 'Lax'
-
-# CORS settings
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True  # For development only
+
+# # CSRF settings
+# CSRF_COOKIE_SECURE = False
+# CSRF_COOKIE_HTTPONLY = False
+# CSRF_COOKIE_SAMESITE = 'Lax'  # Changed from 'None' to 'Lax'
+# CSRF_USE_SESSIONS = True  # Store CSRF token in session
+# CSRF_COOKIE_NAME = 'csrftoken'
+
+# # Session settings
+# SESSION_COOKIE_SECURE = False
+# SESSION_COOKIE_SAMESITE = 'Lax'  # Changed from 'None' to 'Lax'
+
+# # CORS settings
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_ALL_ORIGINS = True  # For development only
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
