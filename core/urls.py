@@ -20,7 +20,7 @@ urlpatterns = [
 
     # Venue endpoints
     path('venues/', views.venue_list, name='venue-list'),
-    path('venues/<int:venue_id>/', views.venue_detail, name='venue-detail'),
+    path('venue/<int:venue_id>/', views.venue_detail, name='venue-detail'),
     path('orders/create/', views.create_order, name='create-order'),
     path('venues/featured/', views.featured_venues, name='featured-venues'),
     path('venues/filter/', views.filter_venues, name='filter-venues'),
