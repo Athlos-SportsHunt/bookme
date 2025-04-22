@@ -8,7 +8,7 @@ class User(AbstractUser):
         if self.is_host:
             return f"{self.username} (Host)"
         return self.username
-    
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     booking = models.ForeignKey("host.Booking", on_delete=models.CASCADE)

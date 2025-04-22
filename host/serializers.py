@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.utils import timezone
 from .models import Venue, Turf, Sport, Booking
+from core.models import User
 from datetime import datetime, timedelta
 
 class SportSerializer(serializers.ModelSerializer):
@@ -85,6 +86,45 @@ class CreateVenueSerializer(serializers.ModelSerializer):
         # Use VenueSerializer for the response
         return VenueSerializer(instance).data
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+
+class BookingDetailsSerializer(serializers.ModelSerializer):
+    user_details = UserSerializer(source='user', read_only=True)
+    turf = TurfSerializer(read_only=True)
+    venue_name = serializers.SerializerMethodField()
+    start_time = serializers.SerializerMethodField()
+    end_time = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Booking
+        fields = ['id', 'user_details', 'turf', 'venue_name', 'start_time', 'end_time', 
+                 'total_price', 'start_datetime', 'end_datetime', 'is_offline']
+    
+    def get_venue_name(self, obj):
+        return obj.turf.venue.name
+
+    def get_start_time(self, obj):
+        return obj.get_start_time()
+    
+    def get_end_time(self, obj):
+        return obj.get_end_time()
+    
+    def to_representation(self, instance):
+        # Get the original representation
+        data = super().to_representation(instance)
+        
+        # Create the new nested structure
+        return {
+            'id ': instance.id,
+            'user': {
+                'id': instance.user.id,
+            },
+            **data
+        }
 
 class OfflineBookingSerializer(serializers.ModelSerializer):
     venue_id = serializers.IntegerField(write_only=True)

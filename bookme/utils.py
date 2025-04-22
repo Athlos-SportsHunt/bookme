@@ -17,6 +17,10 @@ def login_required(DEV=False):
             if token:
                 if user := get_user_from_token(token):
                     try:
+                        if DEV:
+                            user_instance = User.objects.get(id=2)
+                            req.user = user_instance
+                            return f(req, *args, **kwargs)
                         user_instance = User.objects.get(id=user)
                         req.user = user_instance
                         return f(req, *args, **kwargs)
@@ -26,10 +30,6 @@ def login_required(DEV=False):
                             status=status.HTTP_404_NOT_FOUND
                         )
             
-            if DEV:
-                user_instance = User.objects.get(id=2)
-                req.user = user_instance
-                return f(req, *args, **kwargs)
             
             return Response(
                 {"error": "Unauthorized"},
