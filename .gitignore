@@ -11,3 +11,8 @@ wheels/
 
 # windsurf rules
 .windsurfrules
+.github/
+
+
+db.sqlite3
+uv.lock
