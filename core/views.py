@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout
@@ -18,6 +19,7 @@ from bookme.utils import *
 from .models import User, Order
 from host.models import Venue, Turf, Booking
 from .serializers import VenueSerializer, CreateOrderSerializer
+import razorpay
 
 @api_view(['GET'])
 def index(req):
@@ -214,11 +216,10 @@ def filter_venues(request):
     """
 )
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@login_required
 def create_order(request):
     """Create a new order for a turf booking."""
     serializer = CreateOrderSerializer(data=request.data)
-    
     if serializer.is_valid():
         try:
             validated_data = serializer.validated_data
@@ -238,7 +239,7 @@ def create_order(request):
             order = Order.objects.create(
                 user=request.user,
                 booking=booking,
-                payment_id=razorpay_order['id'],
+                order_id=razorpay_order['id'],
                 amount=Decimal(validated_data['amount']) / Decimal(100)  # Convert from paise to rupees
             )
             
@@ -271,3 +272,60 @@ def create_order(request):
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+def checkout(request):
+    """
+    Handle Razorpay payment callback and verify payment signature.
+    And handle rhe booking.
+    """
+    # Extract required Razorpay payment parameters from request data
+    payment_id = request.data.get('razorpay_payment_id')
+    razorpay_order_id = request.data.get('razorpay_order_id')
+    signature = request.data.get('razorpay_signature')
+
+    # Ensure all required values are present
+    if not all([payment_id, razorpay_order_id, signature]):
+        return Response(
+            {'error': 'Missing required payment parameters.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    params_dict = {
+        'razorpay_order_id': razorpay_order_id,
+        'razorpay_payment_id': payment_id,
+        'razorpay_signature': signature
+    }
+    
+    if not Order.objects.filter(order_id=razorpay_order_id).exists():
+        return Response(
+            {'error': "Order doesn't exists."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    order = Order.objects.get(order_id=razorpay_order_id)
+    
+    # Verify payment signature using Razorpay SDK
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+    try:
+        result = client.utility.verify_payment_signature(params_dict)
+        
+        if result is None:
+            return Response(
+                {'error': 'Payment verification failed.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        order.payment_id = payment_id
+        order.signature = signature
+        order.save()
+        
+        order.booking.verified = True
+        order.booking.save()
+        
+        return Response(
+            {'message': 'Payment verified successfully!'},
+            status=status.HTTP_200_OK
+        )
+
+    except razorpay.errors.SignatureVerificationError:
+        return Response({'error': 'Invalid payment signature'}, status=status.HTTP_400_BAD_REQUEST)

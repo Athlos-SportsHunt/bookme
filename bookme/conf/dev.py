@@ -13,7 +13,9 @@ required_env_vars = {
     'AUTH0_CLIENT_ID': os.environ.get('AUTH0_CLIENT_ID'),
     'AUTH0_CLIENT_SECRET': os.environ.get('AUTH0_CLIENT_SECRET'),
     'FRONTEND_URL': os.environ.get('FRONTEND_URL'),
-    'JWT_SECRET': os.environ.get('JWT_SECRET')
+    'JWT_SECRET': os.environ.get('JWT_SECRET'),
+    "RAZORPAY_KEY_ID": os.getenv("RAZORPAY_KEY_ID"),
+    "RAZORPAY_SECRET_KEY": os.getenv("RAZORPAY_SECRET_KEY"),
 }
 
 for var_name, value in required_env_vars.items():
@@ -26,8 +28,8 @@ SOCIAL_AUTH_AUTH0_SECRET = required_env_vars['AUTH0_CLIENT_SECRET']
 SOCIAL_AUTH_AUTH0_SCOPE = ['openid', 'profile', 'email']
 FRONTEND_URL = required_env_vars['FRONTEND_URL'].strip().split(",")
 JWT_SECRET = required_env_vars['JWT_SECRET'].strip()
-
-
+RAZORPAY_KEY_ID = required_env_vars['RAZORPAY_KEY_ID']
+RAZORPAY_SECRET_KEY = required_env_vars['RAZORPAY_SECRET_KEY']
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [

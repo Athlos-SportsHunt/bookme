@@ -77,6 +77,8 @@ class Booking(models.Model):
     end_datetime = models.DateTimeField()
     is_offline = models.BooleanField(default=False)
     
+    verified = models.BooleanField(default=False)
+    
     def get_start_time(self):
         return self.start_datetime.strftime('%H:%M')
     

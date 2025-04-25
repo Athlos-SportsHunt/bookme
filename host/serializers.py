@@ -182,6 +182,7 @@ class OfflineBookingSerializer(serializers.ModelSerializer):
         data['start_datetime'] = start_time
         data['end_datetime'] = end_time
         data['is_offline'] = True
+        data['verified'] = True
         
         return data
 
