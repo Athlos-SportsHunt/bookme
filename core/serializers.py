@@ -60,7 +60,8 @@ class CreateOrderSerializer(serializers.Serializer):
         overlapping = Booking.objects.filter(
             turf=turf,
             start_datetime__lt=end_time,
-            end_datetime__gt=start_time
+            end_datetime__gt=start_time,
+            verified=True
         )
         if overlapping.exists():
             raise serializers.ValidationError('This time slot is already booked')

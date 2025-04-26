@@ -20,6 +20,7 @@ from .models import User, Order
 from host.models import Venue, Turf, Booking
 from .serializers import VenueSerializer, CreateOrderSerializer
 import razorpay
+from host.serializers import BookingDetailsSerializer
 
 @api_view(['GET'])
 def index(req):
@@ -216,7 +217,7 @@ def filter_venues(request):
     """
 )
 @api_view(['POST'])
-@login_required
+@login_required()
 def create_order(request):
     """Create a new order for a turf booking."""
     serializer = CreateOrderSerializer(data=request.data)
@@ -329,3 +330,14 @@ def checkout(request):
 
     except razorpay.errors.SignatureVerificationError:
         return Response({'error': 'Invalid payment signature'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@login_required()
+def my_bookings(request):
+    """
+    Get all bookings for the authenticated user.
+    Returns a list of bookings with turf and venue details.
+    """
+    bookings = Booking.objects.filter(user=request.user, verified=True).order_by('-start_datetime')
+    serializer = BookingDetailsSerializer(bookings, many=True)
+    return Response(serializer.data)

@@ -280,3 +280,80 @@ def host_bookings(request):
         )
     except ValidationError as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+    method='get',
+    responses={
+        200: openapi.Response('Success', BookingDetailsSerializer(many=True)),
+        400: openapi.Response('Bad Request', examples={'application/json': {
+            'error': 'Invalid turf_id'
+        }}),
+        401: openapi.Response('Unauthorized - Invalid or missing token'),
+        403: openapi.Response('Forbidden - User is not a host')
+    },
+    operation_description="""List all bookings for a specific turf owned by the host.
+    
+    Returns a list of bookings with user details, turf information, and booking times."""
+)
+@api_view(['GET'])
+@host_required
+def turf_bookings(request, turf_id):
+    try:
+        turf = get_object_or_404(Turf, id=turf_id, venue__host=request.user)
+        bookings = Booking.objects.filter(turf=turf, verified   =True).order_by('-start_datetime')
+        
+        serializer = BookingDetailsSerializer(bookings, many=True)
+        return Response(serializer.data)
+        
+    except ValidationError as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(f"Error fetching turf bookings: {str(e)}")
+        return Response(
+            {'error': 'An unexpected error occurred while fetching the bookings'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@swagger_auto_schema(
+    method='get',
+    responses={
+        200: openapi.Response('Success', BookingDetailsSerializer(many=True)),
+        400: openapi.Response('Bad Request', examples={'application/json': {
+            'error': 'Invalid venue_id'
+        }}),
+        401: openapi.Response('Unauthorized - Invalid or missing token'),
+        403: openapi.Response('Forbidden - User is not a host')
+    },
+    operation_description="""List all bookings for a specific venue owned by the host.
+    
+    Returns a list of bookings with user details, turf information, and booking times."""
+)
+@api_view(['GET'])
+@host_required
+def venue_bookings(request, venue_id):
+    try:
+        venue = get_object_or_404(Venue, id=venue_id, host=request.user)
+        bookings = Booking.objects.filter(turf__venue=venue, verified=True).order_by('-start_datetime')
+        
+        serializer = BookingDetailsSerializer(bookings, many=True)
+        return Response(serializer.data)
+        
+    except ValidationError as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(f"Error fetching venue bookings: {str(e)}")
+        return Response(
+            {'error': 'An unexpected error occurred while fetching the bookings'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+        
+@api_view(['GET'])
+@host_required
+def recent_bookings(request):
+    bookings = Booking.objects.filter(
+        turf__venue__host=request.user,
+        verified=True,
+    ).order_by('-start_datetime')
+    serializer = BookingDetailsSerializer(bookings, many=True)
+    return Response(serializer.data)

@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from core.models import User
 from jose import jwt
 
-def login_required():
+def login_required(DEV=False):
     def decorator(f):
         @wraps(f)
         def decorated_function(req, *args, **kwargs):
@@ -29,17 +29,17 @@ def login_required():
                             {"error": "User not found"},
                             status=status.HTTP_404_NOT_FOUND
                         )
-                        return Response(
-                {"error": "Unauthorized"},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+                return Response(
+                    {"error": "Unauthorized"},
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
         return decorated_function
     return decorator
 
 
 def host_required(f):
     @wraps(f)
-    @login_required
+    @login_required()
     def decorated_function(req, *args, **kwargs):
         if req.user.is_host:
             return f(req, *args, **kwargs)
@@ -54,7 +54,7 @@ def login_handler(req):
     # Generate JWT
     payload = {
         'user_id': req.user.id,
-        'exp': datetime.now() + timedelta(days=10)
+        'exp': datetime.now() + timedelta(days=30)
     }
     token = jwt.encode(payload, settings.JWT_SECRET, algorithm='HS256')
     

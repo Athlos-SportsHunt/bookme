@@ -102,7 +102,8 @@ class Booking(models.Model):
         overlapping_bookings = Booking.objects.filter(
             turf=self.turf,
             start_datetime__lt=self.end_datetime,
-            end_datetime__gt=self.start_datetime
+            end_datetime__gt=self.start_datetime,
+            verified=True
         ).exclude(pk=self.pk)
         
         if overlapping_bookings.exists():

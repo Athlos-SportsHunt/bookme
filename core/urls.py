@@ -28,6 +28,8 @@ urlpatterns = [
     path('orders/create/', views.create_order, name='create-order'),
     path('orders/checkout/', views.checkout, name='checkout'),
 
+    # My Bookings
+    path('my-bookings/',views.my_bookings, name='my-bookings'),
 ]
 
 app_name = "core"
