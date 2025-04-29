@@ -16,6 +16,7 @@ dependencies = [
     "djangorestframework==3.16.0",
     "drf-yasg==1.21.10",
     "ecdsa==0.19.1",
+    "gunicorn>=23.0.0",
     "idna==3.10",
     "inflection==0.5.1",
     "oauthlib==3.2.2",
@@ -39,5 +40,5 @@ dependencies = [
     "sqlparse==0.5.3",
     "tzdata==2025.2",
     "uritemplate==4.1.1",
-    "urllib3==2.3.0"
+    "urllib3==2.3.0",
 ]

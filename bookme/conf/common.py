@@ -58,12 +58,6 @@ TEMPLATES = [
     },
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ),
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -104,5 +98,3 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/login/handler/'
 SOCIAL_AUTH_LOGOUT_REDIRECT_URL= '/logout/handler/'
 LOGOUT_REDIRECT_URL = '/logout/handler/'
 
-# RAZOR_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
-# RAZOR_SECRET_KEY = os.getenv("RAZORPAY_KEY_SECRET")
