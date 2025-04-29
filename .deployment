@@ -1,7 +1,14 @@
-[config]
-command = pip install --upgrade pip && \
-          pip install uvicorn && \
-          pip install -r requirements.txt && \
-          python manage.py migrate --noinput && \
-          python manage.py collectstatic --noinput && \
-          exec gunicorn bookme.wsgi_prod:application --bind=0.0.0.0 --timeout 600
+command = "\
+  echo '🛠️ Upgrading pip...' && \
+  pip install --upgrade pip && \
+  echo '📦 Installing dependencies…' && \
+  pip install uv && \
+  uv sync && \
+  echo '🚀 (Optional) Running migrations & collectstatic…' && \
+  uv run manage.py migrate --noinput && \
+  uv run manage.py collectstatic --noinput && \
+  echo '🔥 Starting Gunicorn…' && \
+  gunicorn bookme.wsgi_prod:application \
+    --bind=0.0.0.0:8000 \
+    --timeout 600 \
+"
