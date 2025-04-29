@@ -1,0 +1,71 @@
+name: SportsHunt Book Me
+
+on:
+  push:
+    branches:
+      - dev-drf
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install UV package manager
+        run: |
+          pip install uv
+
+      - name: Install dependencies
+        run: |
+          uv sync
+          
+      - name: Run migrations and collect static files
+        run: |
+          uv python manage.prod.py makemigrations
+          uv python manage.prod.py migrate
+          uv python manage.prod.py collectstatic --noinput
+
+      - name: Package application
+        run: |
+          zip -r release.zip . -x "venv/*" "*.git*"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-app
+          path: release.zip
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: python-app
+
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
+
+      
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v3
+        id: deploy-to-webapp
+        with:
+          app-name: 'bookme-prod'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1BA0995AA70346839EEBDC912D49A95E }}
