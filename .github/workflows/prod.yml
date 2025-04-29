@@ -19,7 +19,7 @@ jobs:
       JWT_SECRET: ${{ secrets.SECRET_KEY }}
       RAZORPAY_KEY_ID: ${{ secrets.SECRET_KEY }}
       RAZORPAY_SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      ALLOWED_HOSTS: *
+      ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
 
     steps:
       - name: Checkout repository
