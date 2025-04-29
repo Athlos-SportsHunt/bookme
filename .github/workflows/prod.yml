@@ -31,9 +31,9 @@ jobs:
           
       - name: Run migrations and collect static files
         run: |
-          uv python manage.prod.py makemigrations
-          uv python manage.prod.py migrate
-          uv python manage.prod.py collectstatic --noinput
+          uv run python manage.prod.py makemigrations
+          uv run python manage.prod.py migrate
+          uv run python manage.prod.py collectstatic --noinput
 
       - name: Package application
         run: |
