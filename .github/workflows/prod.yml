@@ -9,8 +9,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
+# these data dont matter thats why 
+    env: 
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      FRONTEND_URL: ${{ secrets.SECRET_KEY }}
+      AUTH0_DOMAIN: ${{ secrets.SECRET_KEY }}
+      AUTH0_CLIENT_ID: ${{ secrets.SECRET_KEY }}
+      AUTH0_CLIENT_SECRET: ${{ secrets.SECRET_KEY }}
+      JWT_SECRET: ${{ secrets.SECRET_KEY }}
+      RAZORPAY_KEY_ID: ${{ secrets.SECRET_KEY }}
+      RAZORPAY_SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
       - name: Checkout repository
