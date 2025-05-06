@@ -35,7 +35,8 @@ ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     *[f"{url.strip()}" for url in FRONTEND_URL],
     "http://localhost:3000",
-    "http://127.0.0.1:8000"
+    "http://127.0.0.1:8000",
+    "https://bookme.azurewebsites.net",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
