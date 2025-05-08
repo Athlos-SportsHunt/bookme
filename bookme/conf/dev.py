@@ -69,9 +69,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
 WSGI_APPLICATION = "bookme.wsgi.application"
 
 CORS_ALLOWED_ORIGINS = [
